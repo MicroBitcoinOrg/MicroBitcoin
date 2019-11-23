@@ -95,7 +95,7 @@ static bool getAddressesFromParams(const UniValue& params, std::vector<std::pair
         CTxDestination dest = DecodeDestination(params[0].get_str());
         CScript scriptPubKey = GetScriptForDestination(dest);
         uint160 hashBytes;
-        int addressType;
+        int addressType = 0;
 
         if (scriptPubKey.IsPayToScriptHash()) {
             hashBytes = uint160(std::vector <unsigned char>(scriptPubKey.begin() + 2, scriptPubKey.begin() + 22));
@@ -300,7 +300,7 @@ UniValue getaddressbalance(const JSONRPCRequest& request)
     std::vector<std::pair<uint160, int> > addresses;
 
     if (!getAddressesFromParams(request.params, addresses)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid address 4");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid address");
     }
 
     std::vector<std::pair<CAddressIndexKey, CAmount> > addressIndex;

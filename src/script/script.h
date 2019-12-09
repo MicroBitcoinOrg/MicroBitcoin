@@ -539,6 +539,8 @@ public:
     bool IsPayToWitnessPubkeyHash() const;
     bool IsLockedPayToWitnessPubkeyHash() const;
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
+
+    bool IsLocked() const;
     int64_t GetLockTime() const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */

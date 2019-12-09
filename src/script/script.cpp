@@ -316,6 +316,14 @@ bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program
     return false;
 }
 
+bool CScript::IsLocked() const
+{
+    return this->IsLockedPayToPublicKeyHash() ||
+        this->IsLockedPayToScriptHash() ||
+        this->IsLockedPayToWitnessScriptHash() ||
+        this->IsLockedPayToWitnessPubkeyHash();
+}
+
 int64_t CScript::GetLockTime() const
 {
     int64_t nLockTime = 0;
@@ -323,11 +331,7 @@ int64_t CScript::GetLockTime() const
     txnouttype whichType;
     Solver(*this, whichType, vSolutions);
 
-    if (this->IsLockedPayToPublicKeyHash() ||
-        this->IsLockedPayToScriptHash() ||
-        this->IsLockedPayToWitnessScriptHash() ||
-        this->IsLockedPayToWitnessPubkeyHash()) {
-
+    if (this->IsLocked()) {
         std::vector<unsigned char> vch1;
         CScript::const_iterator pc1 = this->begin();
         opcodetype opcode1;

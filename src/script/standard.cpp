@@ -307,9 +307,14 @@ public:
 };
 } // namespace
 
-CScript GetScriptForDestination(const CTxDestination& dest)
+CScript GetScriptForDestination(const CTxDestination& dest, const int64_t nLockTime)
 {
     CScript script;
+
+    if (nLockTime > 0) {
+        script.clear();
+        script << CScriptNum(nLockTime) << OP_CHECKLOCKTIMEVERIFY << OP_DROP;
+    }
 
     boost::apply_visitor(CScriptVisitor(&script), dest);
     return script;

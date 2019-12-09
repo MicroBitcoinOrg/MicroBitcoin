@@ -2959,7 +2959,17 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
                 // Dummy fill vin for maximum size estimation
                 //
                 for (const auto& coin : setCoins) {
-                    txNew.vin.push_back(CTxIn(coin.outpoint,CScript()));
+                    txNew.vin.push_back(CTxIn(coin.outpoint, CScript()));
+
+                    // If script is locked by timestamp
+                    // Set transaction locktime to median timestamp
+                    // We want to compare apples to apples
+                    if (coin.txout.scriptPubKey.IsLocked())
+                    {
+                        if (coin.txout.scriptPubKey.GetLockTime() > LOCKTIME_THRESHOLD) {
+                            txNew.nLockTime = chainActive.Tip()->GetMedianTimePast();
+                        }
+                    }
                 }
 
                 nBytes = CalculateMaximumSignedTxSize(txNew, this, coin_control.fAllowWatchOnly);

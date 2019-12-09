@@ -205,6 +205,25 @@ bool CScript::IsPayToPublicKeyHash() const
         (*this)[24] == OP_CHECKSIG);
 }
 
+bool CScript::IsLockedPayToPublicKeyHash() const
+{
+    // Extra-fast test for locked-pay-to-pubkey-hash CScripts:
+    if (this->size() >= 28) {
+        int size = (*this)[0];
+        if (this->size() == 28) { size = 0; }
+
+        return ((*this)[1 + size] == OP_CHECKLOCKTIMEVERIFY &&
+            (*this)[2 + size] == OP_DROP &&
+            (*this)[3 + size] == OP_DUP &&
+            (*this)[4 + size] == OP_HASH160 &&
+            (*this)[5 + size] == 0x14 &&
+            (*this)[26 + size] == OP_EQUALVERIFY &&
+            (*this)[27 + size] == OP_CHECKSIG);
+    }
+
+    return false;
+}
+
 bool CScript::IsPayToScriptHash() const
 {
     // Extra-fast test for pay-to-script-hash CScripts:
@@ -212,6 +231,24 @@ bool CScript::IsPayToScriptHash() const
             (*this)[0] == OP_HASH160 &&
             (*this)[1] == 0x14 &&
             (*this)[22] == OP_EQUAL);
+}
+
+bool CScript::IsLockedPayToScriptHash() const
+{
+    // Mainly required for p2sh wrapped segwit addresses support
+    // Extra-fast test for locked-pay-to-script-hash CScripts:
+    if (this->size() >= 26) {
+        int size = (*this)[0];
+        if (this->size() == 26) { size = 0; }
+
+        return ((*this)[1 + size] == OP_CHECKLOCKTIMEVERIFY &&
+            (*this)[2 + size] == OP_DROP &&
+            (*this)[3 + size] == OP_HASH160 &&
+            (*this)[4 + size] == 0x14 &&
+            (*this)[25 + size] == OP_EQUAL);
+    }
+
+    return false;
 }
 
 bool CScript::IsPayToWitnessScriptHash() const
@@ -222,6 +259,19 @@ bool CScript::IsPayToWitnessScriptHash() const
             (*this)[1] == 0x20);
 }
 
+bool CScript::IsLockedPayToWitnessScriptHash() const
+{
+    // Extra-fast test for locked-pay-to-witness-script-hash CScripts:
+    if (this->size() >= 37) {
+        int size = (*this)[0];
+        if (this->size() == 37) { size = 0; }
+
+        return ((*this)[1 + size] == OP_CHECKLOCKTIMEVERIFY &&
+            (*this)[2 + size] == OP_DROP &&
+            (*this)[3 + size] == OP_0 &&
+            (*this)[4 + size] == 0x20);
+    }
+}
 
 bool CScript::IsPayToWitnessPubkeyHash() const
 {
@@ -229,6 +279,20 @@ bool CScript::IsPayToWitnessPubkeyHash() const
     return (this->size() == 22 &&
             (*this)[0] == OP_0 &&
             (*this)[1] == 0x14);
+}
+
+bool CScript::IsLockedPayToWitnessPubkeyHash() const
+{
+    // Extra-fast test for locked-pay-to-witness-pubkey-hash CScripts:
+    if (this->size() >= 25) {
+        int size = (*this)[0];
+        if (this->size() == 25) { size = 0; }
+
+        return ((*this)[1 + size] == OP_CHECKLOCKTIMEVERIFY &&
+            (*this)[2 + size] == OP_DROP &&
+            (*this)[3 + size] == OP_0 &&
+            (*this)[4 + size] == 0x14);
+    }
 }
 
 // A witness program is any valid CScript that consists of a 1-byte push opcode

@@ -1345,6 +1345,37 @@ CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter) cons
 {
     if (!MoneyRange(txout.nValue))
         throw std::runtime_error(std::string(__func__) + ": value out of range");
+
+    int64_t nLockTime = txout.scriptPubKey.GetLockTime();
+    if (nLockTime > 0) {
+        int64_t nCurrentTime = nLockTime < LOCKTIME_THRESHOLD ?
+            (int64_t)chainActive.Height() :
+            (int64_t)chainActive.Tip()->GetMedianTimePast();
+
+        if (nCurrentTime < nLockTime) {
+            return 0;
+        }
+    }
+
+    return ((IsMine(txout) & filter) ? txout.nValue : 0);
+}
+
+CAmount CWallet::GetLockedCredit(const CTxOut& txout, const isminefilter& filter) const
+{
+    if (!MoneyRange(txout.nValue))
+        throw std::runtime_error(std::string(__func__) + ": value out of range");
+
+    int64_t nLockTime = txout.scriptPubKey.GetLockTime();
+    if (nLockTime > 0) {
+        int64_t nCurrentTime = nLockTime < LOCKTIME_THRESHOLD ?
+            (int64_t)chainActive.Height() :
+            (int64_t)chainActive.Tip()->GetMedianTimePast();
+
+        if (nCurrentTime > nLockTime) {
+            return 0;
+        }
+    }
+
     return ((IsMine(txout) & filter) ? txout.nValue : 0);
 }
 
@@ -1429,6 +1460,18 @@ CAmount CWallet::GetCredit(const CTransaction& tx, const isminefilter& filter) c
     for (const CTxOut& txout : tx.vout)
     {
         nCredit += GetCredit(txout, filter);
+        if (!MoneyRange(nCredit))
+            throw std::runtime_error(std::string(__func__) + ": value out of range");
+    }
+    return nCredit;
+}
+
+CAmount CWallet::GetLockedCredit(const CTransaction& tx, const isminefilter& filter) const
+{
+    CAmount nCredit = 0;
+    for (const CTxOut& txout : tx.vout)
+    {
+        nCredit += GetLockedCredit(txout, filter);
         if (!MoneyRange(nCredit))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
@@ -1936,6 +1979,17 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache) const
     return 0;
 }
 
+CAmount CWalletTx::GetLockedCredit(bool fUseCache) const
+{
+    if (fUseCache && fLockedCreditCached)
+        return nLockedCreditCached;
+    nLockedCreditCached = pwallet->GetLockedCredit(*tx, ISMINE_SPENDABLE);
+    fLockedCreditCached = true;
+    return nLockedCreditCached;
+
+    return 0;
+}
+
 CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter) const
 {
     if (pwallet == nullptr)
@@ -2149,8 +2203,10 @@ CAmount CWallet::GetImmatureBalance() const
         {
             const CWalletTx* pcoin = &entry.second;
             nTotal += pcoin->GetImmatureCredit();
+            nTotal += pcoin->GetLockedCredit();
         }
     }
+
     return nTotal;
 }
 
@@ -2321,6 +2377,17 @@ void CWallet::AvailableCoins(std::vector<COutput> &vCoins, bool fOnlySafe, const
 
             if (IsSpent(wtxid, i))
                 continue;
+
+            int64_t nLockTime = pcoin->tx->vout[i].scriptPubKey.GetLockTime();
+            if (nLockTime > 0) {
+                int64_t nCurrentTime = nLockTime < LOCKTIME_THRESHOLD ?
+                    (int64_t)chainActive.Height() :
+                    (int64_t)chainActive.Tip()->GetMedianTimePast();
+
+                if (nCurrentTime < nLockTime) {
+                    continue;
+                }
+            }
 
             isminetype mine = IsMine(pcoin->tx->vout[i]);
 

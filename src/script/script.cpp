@@ -3,10 +3,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <script/standard.h>
 #include <script/script.h>
 
 #include <tinyformat.h>
 #include <utilstrencodings.h>
+
+typedef std::vector<unsigned char> valtype;
 
 const char* GetOpName(opcodetype opcode)
 {
@@ -311,6 +314,29 @@ bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program
         return true;
     }
     return false;
+}
+
+int64_t CScript::GetLockTime() const
+{
+    int64_t nLockTime = 0;
+    std::vector<valtype> vSolutions;
+    txnouttype whichType;
+    Solver(*this, whichType, vSolutions);
+
+    if (this->IsLockedPayToPublicKeyHash() ||
+        this->IsLockedPayToScriptHash() ||
+        this->IsLockedPayToWitnessScriptHash() ||
+        this->IsLockedPayToWitnessPubkeyHash()) {
+
+        std::vector<unsigned char> vch1;
+        CScript::const_iterator pc1 = this->begin();
+        opcodetype opcode1;
+        this->GetOp(pc1, opcode1, vch1);
+
+        nLockTime = CScriptNum(vch1, true, 5).getint();
+    }
+
+    return nLockTime;
 }
 
 bool CScript::IsPushOnly(const_iterator pc) const

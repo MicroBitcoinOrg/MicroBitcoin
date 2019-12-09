@@ -604,6 +604,7 @@ static UniValue decodescript(const JSONRPCRequest& request)
 
     UniValue r(UniValue::VOBJ);
     CScript script;
+
     if (request.params[0].get_str().size() > 0){
         std::vector<unsigned char> scriptData(ParseHexV(request.params[0], "argument"));
         script = CScript(scriptData.begin(), scriptData.end());

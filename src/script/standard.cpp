@@ -96,7 +96,16 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
     if (scriptPubKey.IsPayToScriptHash())
     {
         typeRet = TX_SCRIPTHASH;
-        std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
+        std::vector<unsigned char> hashBytes(scriptPubKey.begin() + 2, scriptPubKey.begin() + 22);
+        vSolutionsRet.push_back(hashBytes);
+        return true;
+    }
+
+    if (scriptPubKey.IsLockedPayToScriptHash())
+    {
+        int offset = scriptPubKey.size() - 25;
+        typeRet = TX_SCRIPTHASH;
+        std::vector<unsigned char> hashBytes(scriptPubKey.begin() + (2 + offset), scriptPubKey.begin() + (22 + offset));
         vSolutionsRet.push_back(hashBytes);
         return true;
     }

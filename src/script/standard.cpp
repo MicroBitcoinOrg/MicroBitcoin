@@ -310,13 +310,16 @@ public:
 CScript GetScriptForDestination(const CTxDestination& dest, const int64_t nLockTime)
 {
     CScript script;
+    CScript scriptDest;
+    boost::apply_visitor(CScriptVisitor(&scriptDest), dest);
 
     if (nLockTime > 0) {
-        script.clear();
-        script << CScriptNum(nLockTime) << OP_CHECKLOCKTIMEVERIFY << OP_DROP;
+        CScript cltvScript = CScript() << nLockTime << OP_CHECKLOCKTIMEVERIFY << OP_DROP;
+        script = cltvScript + scriptDest;
+    } else {
+        script = scriptDest;
     }
 
-    boost::apply_visitor(CScriptVisitor(&script), dest);
     return script;
 }
 

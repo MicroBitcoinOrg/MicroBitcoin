@@ -334,13 +334,13 @@ public:
         };
 
         vSnapshot = InitSnapshot("regtest.csv", providers);
-        genesis = CreateGenesisBlock(1296688602, 11, 0x207fffff, 1, 900 * COIN, pszTimestamp, vSnapshot);
+        genesis = CreateGenesisBlock(1579961426, 11, 0x207fffff, 1, 900 * COIN, pszTimestamp, vSnapshot);
         
         consensus.hashGenesisBlock = genesis.GetIndexHash();
         consensus.hashGenesisBlockWork = genesis.GetWorkHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0xe1696b8a3aad3447d708dee1caced75d267d517645f18e8cb48e0b96211c823e"));
-        assert(consensus.hashGenesisBlockWork == uint256S("0xf675dfa5a06949d6bf6813bb4ea51178be153a272d24f6906ef56790de3eddf3"));
+        assert(consensus.hashGenesisBlock == uint256S("0xb568d70ab1f31a49d996613bcb1bdaeed10060619a806321e13f24502bc08583"));
+        assert(consensus.hashGenesisBlockWork == uint256S("0x3df77bfd6bf9f910e5dc849a7218e51e784648d93a25963ac24052a123500039"));
         assert(genesis.hashMerkleRoot == uint256S("0xeee9c2aee9997d25398dfbc9bc3dc45121381381db6b630330855181d44a760d"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.

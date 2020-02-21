@@ -175,6 +175,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setgenerate", 1, "genproclimit" },
     { "getaddressutxos", 1, "amount" },
     { "getaddressutxos", 2, "includechaininfo" },
+    { "getnodeaddresses", 0, "count"},
 };
 
 class CRPCConvertTable

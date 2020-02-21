@@ -1108,27 +1108,6 @@ static UniValue verifychain(const JSONRPCRequest& request)
     return CVerifyDB().VerifyDB(Params(), pcoinsTip.get(), nCheckLevel, nCheckDepth);
 }
 
-/** Implementation of IsSuperMajority with better feedback */
-static UniValue SoftForkMajorityDesc(int version, CBlockIndex* pindex, const Consensus::Params& consensusParams)
-{
-    UniValue rv(UniValue::VOBJ);
-    bool activated = false;
-    switch(version)
-    {
-        case 2:
-            activated = consensusParams.nBIP34Enabled;
-            break;
-        case 3:
-            activated = consensusParams.nBIP66Enabled;
-            break;
-        case 4:
-            activated = consensusParams.nBIP65Enabled;
-            break;
-    }
-    rv.pushKV("status", activated);
-    return rv;
-}
-
 UniValue getblockchaininfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 0)

@@ -39,6 +39,12 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
         MilliSleep(100);
     }
 
+    // Check that txindex excludes genesis block transactions.
+    const CBlock& genesis_block = Params().GenesisBlock();
+    for (const auto& txn : genesis_block.vtx) {
+        BOOST_CHECK(!txindex.FindTx(txn->GetHash(), block_hash, tx_disk));
+    }
+
     // Check that txindex has all txs that were in the chain before it started.
     for (const auto& txn : m_coinbase_txns) {
         if (!txindex.FindTx(txn->GetHash(), block_hash, tx_disk)) {

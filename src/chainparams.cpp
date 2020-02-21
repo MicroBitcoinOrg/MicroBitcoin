@@ -124,10 +124,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000011a61aa5ff0e");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        consensus.defaultAssumeValid = uint256S("0xfa30671130a2cad47cb18b89edeb44f897e2686da4c05af6e1452076af5df9a0"); //100000
 
         consensus.lwmaAveragingWindow = 90;
         consensus.baseReward = 5500 * COIN;
@@ -184,9 +184,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            0,
-            0,
-            0
+            // Data from rpc: getchaintxstats 4096 fa30671130a2cad47cb18b89edeb44f897e2686da4c05af6e1452076af5df9a0
+            /* nTime    */ 1576639659,
+            /* nTxCount */ 165589,
+            /* dTxRate  */ 0.02578356864348791
         };
 
         /* enable fallback fee on mainnet */

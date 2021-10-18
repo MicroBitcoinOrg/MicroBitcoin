@@ -1,15 +1,17 @@
-// Copyright (c) 2012-2018 The Bitcoin Core developers
+// Copyright (c) 2012-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <merkleblock.h>
+#include <test/util/setup_common.h>
 #include <uint256.h>
-#include <test/test_bitcoin.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <set>
+#include <vector>
 
-BOOST_FIXTURE_TEST_SUITE(merkleblock_tests, BasicTestingSetup)
+BOOST_AUTO_TEST_SUITE(merkleblock_tests)
 
 /**
  * Create a CMerkleBlock using a list of txids which will be found in the
@@ -32,7 +34,7 @@ BOOST_AUTO_TEST_CASE(merkleblock_construct_from_txids_found)
 
     CMerkleBlock merkleBlock(block, txids);
 
-    BOOST_CHECK_EQUAL(merkleBlock.header.GetHash().GetHex(), block.GetHash().GetHex());
+    BOOST_CHECK_EQUAL(merkleBlock.header.GetIndexHash().GetHex(), block.GetIndexHash().GetHex());
 
     // vMatchedTxn is only used when bloom filter is specified.
     BOOST_CHECK_EQUAL(merkleBlock.vMatchedTxn.size(), 0U);
@@ -64,7 +66,7 @@ BOOST_AUTO_TEST_CASE(merkleblock_construct_from_txids_not_found)
     txids2.insert(uint256S("0xc0ffee00003bafa802c8aa084379aa98d9fcd632ddc2ed9782b586ec87451f20"));
     CMerkleBlock merkleBlock(block, txids2);
 
-    BOOST_CHECK_EQUAL(merkleBlock.header.GetHash().GetHex(), block.GetHash().GetHex());
+    BOOST_CHECK_EQUAL(merkleBlock.header.GetIndexHash().GetHex(), block.GetIndexHash().GetHex());
     BOOST_CHECK_EQUAL(merkleBlock.vMatchedTxn.size(), 0U);
 
     std::vector<uint256> vMatched;

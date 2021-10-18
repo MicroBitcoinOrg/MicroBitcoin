@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2018 The Bitcoin Core developers
+// Copyright (c) 2012-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,10 +12,10 @@
 #include <random.h>
 #include <serialize.h>
 #include <streams.h>
+#include <test/util/setup_common.h>
 #include <uint256.h>
-#include <util.h>
-#include <utilstrencodings.h>
-#include <test/test_bitcoin.h>
+#include <util/strencodings.h>
+#include <util/system.h>
 
 #include <vector>
 
@@ -27,6 +27,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize)
 {
     CBloomFilter filter(3, 0.01, 0, BLOOM_UPDATE_ALL);
 
+    BOOST_CHECK_MESSAGE( !filter.contains(ParseHex("99108ad8ed9bb6274d3980bab5a85c048f0950c8")), "Bloom filter should be empty!");
     filter.insert(ParseHex("99108ad8ed9bb6274d3980bab5a85c048f0950c8"));
     BOOST_CHECK_MESSAGE( filter.contains(ParseHex("99108ad8ed9bb6274d3980bab5a85c048f0950c8")), "Bloom filter doesn't contain just-inserted object!");
     // One bit different in first byte
@@ -41,17 +42,11 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     stream << filter;
 
-    std::vector<unsigned char> vch = ParseHex("03614e9b050000000000000001");
-    std::vector<char> expected(vch.size());
-
-    for (unsigned int i = 0; i < vch.size(); i++)
-        expected[i] = (char)vch[i];
+    std::vector<uint8_t> expected = ParseHex("03614e9b050000000000000001");
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 
     BOOST_CHECK_MESSAGE( filter.contains(ParseHex("99108ad8ed9bb6274d3980bab5a85c048f0950c8")), "Bloom filter doesn't contain just-inserted object!");
-    filter.clear();
-    BOOST_CHECK_MESSAGE( !filter.contains(ParseHex("99108ad8ed9bb6274d3980bab5a85c048f0950c8")), "Bloom filter should be empty!");
 }
 
 BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
@@ -73,11 +68,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     stream << filter;
 
-    std::vector<unsigned char> vch = ParseHex("03ce4299050000000100008001");
-    std::vector<char> expected(vch.size());
-
-    for (unsigned int i = 0; i < vch.size(); i++)
-        expected[i] = (char)vch[i];
+    std::vector<uint8_t> expected = ParseHex("03ce4299050000000100008001");
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
@@ -97,11 +88,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     stream << filter;
 
-    std::vector<unsigned char> vch = ParseHex("038fc16b080000000000000001");
-    std::vector<char> expected(vch.size());
-
-    for (unsigned int i = 0; i < vch.size(); i++)
-        expected[i] = (char)vch[i];
+    std::vector<unsigned char> expected = ParseHex("038fc16b080000000000000001");
 
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
@@ -183,7 +170,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_1)
     filter.insert(uint256S("0x74d681e0e03bafa802c8aa084379aa98d9fcd632ddc2ed9782b586ec87451f20"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK_EQUAL(merkleBlock.header.GetHash().GetHex(), block.GetHash().GetHex());
+    BOOST_CHECK_EQUAL(merkleBlock.header.GetIndexHash().GetHex(), block.GetIndexHash().GetHex());
 
     BOOST_CHECK_EQUAL(merkleBlock.vMatchedTxn.size(), 1U);
     std::pair<unsigned int, uint256> pair = merkleBlock.vMatchedTxn[0];
@@ -201,7 +188,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_1)
     // Also match the 8th transaction
     filter.insert(uint256S("0xdd1fd2a6fc16404faf339881a90adbde7f4f728691ac62e8f168809cdfae1053"));
     merkleBlock = CMerkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 2);
 
@@ -229,7 +216,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2)
     filter.insert(uint256S("0xe980fe9f792d014e73b95203dc1335c5f9ce19ac537a419e6df5b47aecb93b70"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 1);
     std::pair<unsigned int, uint256> pair = merkleBlock.vMatchedTxn[0];
@@ -250,7 +237,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2)
     filter.insert(ParseHex("044a656f065871a353f216ca26cef8dde2f03e8c16202d2e8ad769f02032cb86a5eb5e56842e92e19141d60a01928f8dd2c875a390f67c1f6c94cfc617c0ea45af"));
 
     merkleBlock = CMerkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 4);
 
@@ -284,7 +271,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2_with_update_none)
     filter.insert(uint256S("0xe980fe9f792d014e73b95203dc1335c5f9ce19ac537a419e6df5b47aecb93b70"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 1);
     std::pair<unsigned int, uint256> pair = merkleBlock.vMatchedTxn[0];
@@ -305,7 +292,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2_with_update_none)
     filter.insert(ParseHex("044a656f065871a353f216ca26cef8dde2f03e8c16202d2e8ad769f02032cb86a5eb5e56842e92e19141d60a01928f8dd2c875a390f67c1f6c94cfc617c0ea45af"));
 
     merkleBlock = CMerkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 3);
 
@@ -336,7 +323,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_3_and_serialize)
     filter.insert(uint256S("0x63194f18be0af63f2c6bc9dc0f777cbefed3d9415c4af83f3ee3a3d669c00cb5"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 1);
 
@@ -353,11 +340,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_3_and_serialize)
     CDataStream merkleStream(SER_NETWORK, PROTOCOL_VERSION);
     merkleStream << merkleBlock;
 
-    std::vector<unsigned char> vch = ParseHex("0100000079cda856b143d9db2c1caff01d1aecc8630d30625d10e8b4b8b0000000000000b50cc069d6a3e33e3ff84a5c41d9d3febe7c770fdcc96b2c3ff60abe184f196367291b4d4c86041b8fa45d630100000001b50cc069d6a3e33e3ff84a5c41d9d3febe7c770fdcc96b2c3ff60abe184f19630101");
-    std::vector<char> expected(vch.size());
-
-    for (unsigned int i = 0; i < vch.size(); i++)
-        expected[i] = (char)vch[i];
+    std::vector<uint8_t> expected = ParseHex("0100000079cda856b143d9db2c1caff01d1aecc8630d30625d10e8b4b8b0000000000000b50cc069d6a3e33e3ff84a5c41d9d3febe7c770fdcc96b2c3ff60abe184f196367291b4d4c86041b8fa45d630100000001b50cc069d6a3e33e3ff84a5c41d9d3febe7c770fdcc96b2c3ff60abe184f19630101");
 
     BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(), expected.end(), merkleStream.begin(), merkleStream.end());
 }
@@ -375,7 +358,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4)
     filter.insert(uint256S("0x0a2a92f0bda4727d0a13eaddf4dd9ac6b5c61a1429e6b2b818f19b15df0ac154"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 1);
     std::pair<unsigned int, uint256> pair = merkleBlock.vMatchedTxn[0];
@@ -393,7 +376,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4)
     // Also match the 4th transaction
     filter.insert(uint256S("0x02981fa052f0481dbc5868f4fc2166035a10f27a03cfd2de67326471df5bc041"));
     merkleBlock = CMerkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     BOOST_CHECK(merkleBlock.vMatchedTxn.size() == 2);
 
@@ -423,7 +406,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4_test_p2pubkey_only)
     filter.insert(ParseHex("b6efd80d99179f4f4ff6f4dd0a007d018c385d21"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     // We should match the generation outpoint
     BOOST_CHECK(filter.contains(COutPoint(uint256S("0x147caa76786596590baa4e98f5d9f48b86c7765e489f7a6ff3360fe5c674360b"), 0)));
@@ -446,7 +429,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4_test_update_none)
     filter.insert(ParseHex("b6efd80d99179f4f4ff6f4dd0a007d018c385d21"));
 
     CMerkleBlock merkleBlock(block, filter);
-    BOOST_CHECK(merkleBlock.header.GetHash() == block.GetHash());
+    BOOST_CHECK(merkleBlock.header.GetIndexHash() == block.GetIndexHash());
 
     // We shouldn't match any outpoints (UPDATE_NONE)
     BOOST_CHECK(!filter.contains(COutPoint(uint256S("0x147caa76786596590baa4e98f5d9f48b86c7765e489f7a6ff3360fe5c674360b"), 0)));
@@ -461,6 +444,9 @@ static std::vector<unsigned char> RandomData()
 
 BOOST_AUTO_TEST_CASE(rolling_bloom)
 {
+    SeedInsecureRand(SeedRand::ZEROS);
+    g_mock_deterministic_tests = true;
+
     // last-100-entry, 1% false positive:
     CRollingBloomFilter rb1(100, 0.01);
 
@@ -485,12 +471,8 @@ BOOST_AUTO_TEST_CASE(rolling_bloom)
         if (rb1.contains(RandomData()))
             ++nHits;
     }
-    // Run test_bitcoin with --log_level=message to see BOOST_TEST_MESSAGEs:
-    BOOST_TEST_MESSAGE("RollingBloomFilter got " << nHits << " false positives (~100 expected)");
-
-    // Insanely unlikely to get a fp count outside this range:
-    BOOST_CHECK(nHits > 25);
-    BOOST_CHECK(nHits < 175);
+    // Expect about 100 hits
+    BOOST_CHECK_EQUAL(nHits, 75U);
 
     BOOST_CHECK(rb1.contains(data[DATASIZE-1]));
     rb1.reset();
@@ -517,10 +499,8 @@ BOOST_AUTO_TEST_CASE(rolling_bloom)
         if (rb1.contains(data[i]))
             ++nHits;
     }
-    // Expect about 5 false positives, more than 100 means
-    // something is definitely broken.
-    BOOST_TEST_MESSAGE("RollingBloomFilter got " << nHits << " false positives (~5 expected)");
-    BOOST_CHECK(nHits < 100);
+    // Expect about 5 false positives
+    BOOST_CHECK_EQUAL(nHits, 6U);
 
     // last-1000-entry, 0.01% false positive:
     CRollingBloomFilter rb2(1000, 0.001);
@@ -531,6 +511,7 @@ BOOST_AUTO_TEST_CASE(rolling_bloom)
     for (int i = 0; i < DATASIZE; i++) {
         BOOST_CHECK(rb2.contains(data[i]));
     }
+    g_mock_deterministic_tests = false;
 }
 
 BOOST_AUTO_TEST_SUITE_END()

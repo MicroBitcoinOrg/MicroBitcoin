@@ -1,6 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2018 The Bitcoin Core developers
-// Copyright (c) 2019 MicroBitcoin developers
+// Copyright (c) 2009-2019 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,11 +7,8 @@
 
 #include <hash.h>
 #include <tinyformat.h>
-#include <utilstrencodings.h>
-#include <crypto/common.h>
 #include <crypto/yespower/yespower.h>
 #include <streams.h>
-#include <stdlib.h>
 #include <sync.h>
 
 uint256 CBlockHeaderUncached::GetIndexHash() const
@@ -22,7 +18,7 @@ uint256 CBlockHeaderUncached::GetIndexHash() const
 
 uint256 CBlockHeaderUncached::GetWorkHash() const
 {
-    static const yespower_params_t yespower_microbitcoin = {
+    static const yespower_params_t yespower_micromicro = {
         .N = 2048,
         .r = 32,
         .pers = (const uint8_t *)"Now I am become Death, the destroyer of worlds",
@@ -33,7 +29,7 @@ uint256 CBlockHeaderUncached::GetWorkHash() const
     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
     ss << *this;
 
-    if (yespower_tls((unsigned char *)&ss[0], ss.size(), &yespower_microbitcoin, (yespower_binary_t *)&thash)) {
+    if (yespower_tls((unsigned char *)&ss[0], ss.size(), &yespower_micromicro, (yespower_binary_t *)&thash)) {
         fprintf(stderr, "Error: CBlockHeaderUncached::GetWorkHash(): failed to compute PoW hash (out of memory?)\n");
         exit(1);
     }

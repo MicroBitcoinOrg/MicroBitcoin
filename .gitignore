@@ -1,12 +1,17 @@
 *.tar.gz
 
 *.exe
-src/bitcoin
+*.pdb
+src/micro
 src/microd
 src/micro-cli
+src/micro-gui
+src/micro-node
 src/micro-tx
-src/test/test_bitcoin
-src/test/test_bitcoin_fuzzy
+src/micro-util
+src/micro-wallet
+src/test/fuzz/fuzz
+src/test/test_micro
 src/qt/test/test_micro-qt
 
 # autoreconf
@@ -26,13 +31,16 @@ build-aux/m4/ltversion.m4
 build-aux/missing
 build-aux/compile
 build-aux/test-driver
+config.cache
 config.log
 config.status
 configure
+configure~
 libtool
 src/config/micro-config.h
 src/config/micro-config.h.in
 src/config/stamp-h1
+src/obj
 share/setup.nsi
 share/qt/Info.plist
 
@@ -54,24 +62,29 @@ src/qt/micro-qt.includes
 .dirstamp
 .libs
 .*.swp
-*.*~*
+*~
 *.bak
 *.rej
 *.orig
 *.pyc
 *.o
 *.o-*
-*.patch
 *.a
 *.pb.cc
 *.pb.h
+*.dat
 
 *.log
 *.trs
 *.dmg
+*.iso
 
 *.json.h
 *.raw.h
+
+# Only ignore unexpected patches
+*.patch
+!depends/patches/**/*.patch
 
 #libtool object files
 *.lo
@@ -80,9 +93,13 @@ src/qt/micro-qt.includes
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-micro-qt
-Micro-Qt.app
+!depends/Makefile
+src/qt/micro-qt
+MicroBitcoin-Qt.app
 background.tiff*
+
+# Qt Creator
+Makefile.am.user
 
 # Unit-tests
 Makefile.test
@@ -95,13 +112,19 @@ qrc_*.cpp
 .DS_Store
 build
 
+# Previous releases
+releases
+
 #lcov
 *.gcno
 *.gcda
 /*.info
-test_bitcoin.coverage/
+test_micro.coverage/
 total.coverage/
+fuzz.coverage/
 coverage_percent.txt
+/cov_tool_wrapper.sh
+qa-assets/
 
 #build tests
 linux-coverage-build
@@ -109,10 +132,23 @@ linux-build
 win32-build
 test/config.ini
 test/cache/*
+test/.mypy_cache/
 
 !src/leveldb*/Makefile
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libmicroconsensus.pc
 contrib/devtools/split-debug.sh
+
+# Output from running db4 installation
+db4/
+
+# clang-check
+*.plist
+
+osx_volname
+dist/
+*.background.tiff
+
+/guix-build-*

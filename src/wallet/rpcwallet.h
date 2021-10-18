@@ -1,20 +1,27 @@
-// Copyright (c) 2016-2018 The Bitcoin Core developers
+// Copyright (c) 2016-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef MICRO_WALLET_RPCWALLET_H
 #define MICRO_WALLET_RPCWALLET_H
 
-#include <string>
+#include <span.h>
 
-class CRPCTable;
+#include <any>
+#include <memory>
+#include <string>
+#include <vector>
+
+class CRPCCommand;
 class CWallet;
 class JSONRPCRequest;
+class LegacyScriptPubKeyMan;
 class UniValue;
-struct PartiallySignedTransaction;
 class CTransaction;
+struct PartiallySignedTransaction;
+struct WalletContext;
 
-void RegisterWalletRPCCommands(CRPCTable &t);
+Span<const CRPCCommand> GetWalletRPCCommands();
 
 /**
  * Figures out what wallet, if any, to use for a JSONRPCRequest.
@@ -24,11 +31,10 @@ void RegisterWalletRPCCommands(CRPCTable &t);
  */
 std::shared_ptr<CWallet> GetWalletForJSONRPCRequest(const JSONRPCRequest& request);
 
-std::string HelpRequiringPassphrase(CWallet *);
-void EnsureWalletIsUnlocked(CWallet *);
-bool EnsureWalletIsAvailable(CWallet *, bool avoidException);
+void EnsureWalletIsUnlocked(const CWallet&);
+WalletContext& EnsureWalletContext(const std::any& context);
+LegacyScriptPubKeyMan& EnsureLegacyScriptPubKeyMan(CWallet& wallet, bool also_create = false);
 
-UniValue getaddressinfo(const JSONRPCRequest& request);
-UniValue signrawtransactionwithwallet(const JSONRPCRequest& request);
-bool FillPSBT(const CWallet* pwallet, PartiallySignedTransaction& psbtx, int sighash_type = 1 /* SIGHASH_ALL */, bool sign = true, bool bip32derivs = false);
+RPCHelpMan getaddressinfo();
+RPCHelpMan signrawtransactionwithwallet();
 #endif //MICRO_WALLET_RPCWALLET_H

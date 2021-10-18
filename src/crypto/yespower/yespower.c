@@ -94,9 +94,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "crypto/utils/insecure_memzero.h"
-#include "crypto/utils/sysendian.h"
-#include "crypto/blake2b.h"
+#include <crypto/utils/insecure_memzero.h>
+#include <crypto/utils/sysendian.h>
+#include <crypto/blake2b.h>
 
 #include "yespower.h"
 

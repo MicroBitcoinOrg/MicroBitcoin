@@ -1,13 +1,19 @@
-// Copyright (c) 2019 MicroBitcoin developers
+// Copyright (c) 2019-2021 MicroBitcoin developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <util.h>
 #include <amount.h>
 #include <snapshot.h>
-#include <utilstrencodings.h>
+#include <util/time.h>
+#include <util/system.h>
+#include <util/strencodings.h>
 #include <primitives/transaction.h>
 #include <support/httplib.h>
 #include <support/csv.h>
 #include <core_io.h>
 #include <random>
+#include <fs.h>
 
 std::string TimestampStr() {
     return FormatISO8601DateTime(GetTimeMicros() / 1000000) + " ";
@@ -46,8 +52,9 @@ CScript ReadScriptSnapshot(const std::string& s) {
 }
 
 bool FetchSnapshot(fs::path &path, SnapshotProvider provider) {
-    httplib::Client client(provider.address.c_str(), provider.port);
-    auto result = client.Get(provider.path.c_str());
+    httplib::Client cli(provider.address.c_str());
+    auto result = cli.Get(provider.path.c_str());
+
     if (result && result->status == 200) {
         std::cout << TimestampStr() << "Shapshot: Successfully fetched snapshot file" << std::endl;
         FILE *snapshot_file = fsbridge::fopen(path, "w");
@@ -83,15 +90,23 @@ std::vector<SnapshotEntry> LoadSnapshot(fs::path &path) {
     return vSnapshot;
 }
 
+std::vector<SnapshotEntry> EmptySnapshot() {
+    std::vector<SnapshotEntry> vSnapshot;
+    return vSnapshot;
+}
+
 std::vector<SnapshotEntry> InitSnapshot(const std::string fileName, std::vector<SnapshotProvider> providers) {
-    fs::path path = GetSnapshotDir() / fileName;
+    fs::path snapshot_dir = gArgs.GetDataDirBase() / "snapshot";
+    fs::path path = snapshot_dir / fileName;
+    fs::create_directories(snapshot_dir);
+
     if (!fs::exists(path)) {
         // Pick random snapshot provider
         std::random_device random_device;
         std::mt19937 engine {random_device()};
         std::uniform_int_distribution<int> dist(0, providers.size() - 1);
         int provider_index = dist(engine);
-        std::cout << TimestampStr() << "Shapshot: File " << fileName << " not found, trying to fetch it from " << providers[provider_index].address << std::endl;
+        std::cout << TimestampStr() << "Shapshot: File " << fileName << " not found, trying to fetch it from " << providers[provider_index].address << providers[provider_index].path << std::endl;
         bool loaded = FetchSnapshot(path, providers[provider_index]);
         assert(loaded);
     }

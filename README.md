@@ -1,10 +1,11 @@
 # MicroBitcoin Technical Specs
 
-New network is using [Bitcoin Core 0.17](https://github.com/bitcoin/bitcoin/tree/0.17) codebase and include following features:
+New network is using [Bitcoin Core 22](https://github.com/bitcoin/bitcoin/tree/22.x) codebase and include following features:
 - UTXO Snapshot from legacy network from block 525001 (first MBC block) to most recent block at the moment of new network start.
 - New emission schedule
 - Smaller block size
 - YesPower Proof-of-Work algorightm
+- Taproot activation
 
 ### Prerequisites
 

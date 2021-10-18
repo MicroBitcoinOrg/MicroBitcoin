@@ -1,15 +1,13 @@
-// Copyright (c) 2019 MicroBitcoin developers
+// Copyright (c) 2019-2021 MicroBitcoin developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef MICRO_SNAPSHOT_H
 #define MICRO_SNAPSHOT_H
 
-#include <util.h>
-// #include <amount.h>
-// #include <utilstrencodings.h>
 #include <primitives/transaction.h>
-// #include <support/httplib.h>
-// #include <support/csv.h>
-// #include <core_io.h>
-// #include <random>
+#include <util.h>
+#include <fs.h>
 
 struct SnapshotEntry {
     CScript script;
@@ -19,12 +17,12 @@ struct SnapshotEntry {
 struct SnapshotProvider {
     std::string address;
     std::string path;
-    int port;
 };
 
 CScript ReadScriptSnapshot(const std::string& s);
 bool FetchSnapshot(fs::path &path, SnapshotProvider provider);
 std::vector<SnapshotEntry> LoadSnapshot(fs::path &path);
+std::vector<SnapshotEntry> EmptySnapshot();
 std::vector<SnapshotEntry> InitSnapshot(const std::string fileName, std::vector<SnapshotProvider> providers);
 
 #endif // MICRO_SNAPSHOT_H

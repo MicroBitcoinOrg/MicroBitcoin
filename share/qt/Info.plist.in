@@ -3,7 +3,7 @@
 <plist version="0.9">
 <dict>
   <key>LSMinimumSystemVersion</key>
-  <string>10.10.0</string>
+  <string>10.14.0</string>
 
   <key>LSArchitecturePriority</key>
   <array>
@@ -11,34 +11,34 @@
   </array>
 
   <key>CFBundleIconFile</key>
-  <string>micro.icns</string>
+  <string>bitcoin.icns</string>
 
   <key>CFBundlePackageType</key>
   <string>APPL</string>
 
-  <key>CFBundleGetInfoString</key>
-  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@, Copyright © 2009-@COPYRIGHT_YEAR@ @COPYRIGHT_HOLDERS_FINAL@</string>
+  <key>NSHumanReadableCopyright</key>
+  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_BUILD@, Copyright © 2009-@COPYRIGHT_YEAR@ @COPYRIGHT_HOLDERS_FINAL@</string>
 
   <key>CFBundleShortVersionString</key>
-  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@</string>
+  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_BUILD@</string>
 
   <key>CFBundleVersion</key>
-  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@</string>
+  <string>@CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_BUILD@</string>
 
   <key>CFBundleSignature</key>
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>Micro-Qt</string>
-  
+  <string>Bitcoin-Qt</string>
+
   <key>CFBundleName</key>
-  <string>Micro-Qt</string>
+  <string>Bitcoin-Qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>org.microbitcoin.Micro-Qt</string>
+  <string>org.bitcoinfoundation.Bitcoin-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,48 +46,11 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>org.microbitcoin.BitcoinPayment</string>
+      <string>org.bitcoin.BitcoinPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>microbitcoin</string>
+        <string>bitcoin</string>
       </array>
-    </dict>
-  </array>
-
-  <key>UTExportedTypeDeclarations</key>
-  <array>
-    <dict>
-      <key>UTTypeIdentifier</key>
-      <string>org.microbitcoin.paymentrequest</string>
-      <key>UTTypeDescription</key>
-      <string>Bitcoin payment request</string>
-      <key>UTTypeConformsTo</key>
-      <array>
-        <string>public.data</string>
-      </array>
-      <key>UTTypeTagSpecification</key>
-      <dict>
-        <key>public.mime-type</key>
-        <string>application/x-bitcoin-payment-request</string>
-        <key>public.filename-extension</key>
-        <array>
-          <string>bitcoinpaymentrequest</string>
-        </array>
-      </dict>
-    </dict>
-  </array>
-
-  <key>CFBundleDocumentTypes</key>
-  <array>
-    <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>LSItemContentTypes</key>
-      <array>
-        <string>org.microbitcoin.paymentrequest</string>
-      </array>
-      <key>LSHandlerRank</key>
-      <string>Owner</string>
     </dict>
   </array>
 
@@ -97,12 +60,6 @@
   <key>NSHighResolutionCapable</key>
     <string>True</string>
 
-  <key>LSAppNapIsDisabled</key>
-    <string>True</string>
-
-  <key>NSRequiresAquaSystemAppearance</key>
-    <string>True</string>
-  
   <key>LSApplicationCategoryType</key>
     <string>public.app-category.finance</string>
 </dict>

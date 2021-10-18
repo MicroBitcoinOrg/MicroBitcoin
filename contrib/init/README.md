@@ -1,12 +1,12 @@
 Sample configuration files for:
 ```
-SystemD: microd.service
-Upstart: microd.conf
-OpenRC:  microd.openrc
-         microd.openrcconf
-CentOS:  microd.init
-macOS:    org.microbitcoin.microd.plist
+systemd: bitcoind.service
+Upstart: bitcoind.conf
+OpenRC:  bitcoind.openrc
+         bitcoind.openrcconf
+CentOS:  bitcoind.init
+macOS:   org.bitcoin.bitcoind.plist
 ```
 have been made available to assist packagers in creating node packages here.
 
-See doc/init.md for more information.
+See [doc/init.md](../../doc/init.md) for more information.

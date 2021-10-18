@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_NOTIFICATOR_H
-#define MICRO_QT_NOTIFICATOR_H
+#ifndef BITCOIN_QT_NOTIFICATOR_H
+#define BITCOIN_QT_NOTIFICATOR_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/micro-config.h>
+#include <config/bitcoin-config.h>
 #endif
 
 #include <QIcon>
@@ -57,7 +57,7 @@ private:
     enum Mode {
         None,                       /**< Ignore informational notifications, and show a modal pop-up dialog for Critical notifications. */
         Freedesktop,                /**< Use DBus org.freedesktop.Notifications */
-        QSystemTray,                /**< Use QSystemTray::showMessage */
+        QSystemTray,                /**< Use QSystemTrayIcon::showMessage() */
         UserNotificationCenter      /**< Use the 10.8+ User Notification Center (Mac only) */
     };
     QString programName;
@@ -68,10 +68,10 @@ private:
 
     void notifyDBus(Class cls, const QString &title, const QString &text, const QIcon &icon, int millisTimeout);
 #endif
-    void notifySystray(Class cls, const QString &title, const QString &text, const QIcon &icon, int millisTimeout);
+    void notifySystray(Class cls, const QString &title, const QString &text, int millisTimeout);
 #ifdef Q_OS_MAC
-    void notifyMacUserNotificationCenter(Class cls, const QString &title, const QString &text, const QIcon &icon);
+    void notifyMacUserNotificationCenter(const QString &title, const QString &text);
 #endif
 };
 
-#endif // MICRO_QT_NOTIFICATOR_H
+#endif // BITCOIN_QT_NOTIFICATOR_H

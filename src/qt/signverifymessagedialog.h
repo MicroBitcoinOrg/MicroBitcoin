@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_SIGNVERIFYMESSAGEDIALOG_H
-#define MICRO_QT_SIGNVERIFYMESSAGEDIALOG_H
+#ifndef BITCOIN_QT_SIGNVERIFYMESSAGEDIALOG_H
+#define BITCOIN_QT_SIGNVERIFYMESSAGEDIALOG_H
 
 #include <QDialog>
 
@@ -30,7 +30,8 @@ public:
     void showTab_VM(bool fShow);
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
+    void changeEvent(QEvent* e) override;
 
 private:
     Ui::SignVerifyMessageDialog *ui;
@@ -50,4 +51,4 @@ private Q_SLOTS:
     void on_clearButton_VM_clicked();
 };
 
-#endif // MICRO_QT_SIGNVERIFYMESSAGEDIALOG_H
+#endif // BITCOIN_QT_SIGNVERIFYMESSAGEDIALOG_H

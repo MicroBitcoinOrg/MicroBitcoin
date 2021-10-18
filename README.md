@@ -1,84 +1,82 @@
-# MicroBitcoin Technical Specs
+Bitcoin Core integration/staging tree
+=====================================
 
-New network is using [Bitcoin Core 0.17](https://github.com/bitcoin/bitcoin/tree/0.17) codebase and include following features:
-- UTXO Snapshot from legacy network from block 525001 (first MBC block) to most recent block at the moment of new network start.
-- New emission schedule
-- Smaller block size
-- YesPower Proof-of-Work algorightm
+https://bitcoincore.org
 
-### Prerequisites
+For an immediately usable, binary version of the Bitcoin Core software, see
+https://bitcoincore.org/en/download/.
 
-There couple reasons which prerequisites for launching new network:
-- Launch of new network will create natural growth of userbase.
-- Current total MBC supply is over-minted for the current userbase. To improve this situation coins which haven't been moved since hardfork will be burned and block emission schedule will be adjusted which would create more fair distributrion of supply.
-- Inefficiently slow validation of new blocks caused by RFv2 PoW algorightm.
-- Premine will be locked with [OP_CHECKLOCKTIMEVERIFY](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) output script.
+Further information about Bitcoin Core is available in the [doc folder](/doc).
 
-### UTXOs snapshot
+What is Bitcoin?
+----------------
 
-Snapshot will be done in following maner: all UTXO set starting after block 525000 (fist MBC block) to most recent block at the moment of new network start will be copied and merged. For example if you had 3 unspent outputs on your address in old network, they will be merged into one output with sum amount. All merged outputs will be set into genesis block of new network. To make them spendable genesis block will be added to database as an actual block.
+Bitcoin is an experimental digital currency that enables instant payments to
+anyone, anywhere in the world. Bitcoin uses peer-to-peer technology to operate
+with no central authority: managing transactions and issuing money are carried
+out collectively by the network. Bitcoin Core is the name of open source
+software which enables the use of this currency.
 
-Example:
-```
-Output #1
-Script: OP_DUP OP_HASH160 84169602ccd51a35c2ba54bb209320dddce62660 OP_EQUALVERIFY OP_CHECKSIG
-Amount: 3700000
+For more information read the original Bitcoin whitepaper.
 
-Output #2
-Script: OP_DUP OP_HASH160 84169602ccd51a35c2ba54bb209320dddce62660 OP_EQUALVERIFY OP_CHECKSIG
-Amount: 120000
+License
+-------
 
-Output #3
-Script: OP_DUP OP_HASH160 84169602ccd51a35c2ba54bb209320dddce62660 OP_EQUALVERIFY OP_CHECKSIG
-Amount: 34052
-```
+Bitcoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+information or see https://opensource.org/licenses/MIT.
 
-Will be merged:
+Development Process
+-------------------
 
-```
-Merged output
-Script: OP_DUP OP_HASH160 84169602ccd51a35c2ba54bb209320dddce62660 OP_EQUALVERIFY OP_CHECKSIG
-Amount: 3854052
-```
+The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
+completely stable. [Tags](https://github.com/bitcoin/bitcoin/tags) are created
+regularly from release branches to indicate new official, stable release versions of Bitcoin Core.
 
-### Emission
+The https://github.com/bitcoin-core/gui repository is used exclusively for the
+development of the GUI. Its master branch is identical in all monotree
+repositories. Release branches and tags do not exist, so please do not fork
+that repository unless it is for development reasons.
 
-Reward for each new block will be calculated using following function:
+The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
+and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
 
-```c++
-#include <iostream>
-#include <cmath>
+Testing
+-------
 
-// Amounts of satoshit per coins
-const int64_t COIN = 10000;
+Testing and code review is the bottleneck for development; we get more pull
+requests than we can review and test on short notice. Please be patient and help out by testing
+other people's pull requests, and remember this is a security-critical project where any mistake might cost people
+lots of money.
 
-int64_t reward(int height) {
-	// Initial reward per block
-	const int64_t reward = 5500 * COIN;
-	// Reward decreasing epoch (2 years)
-	const int epoch = 525960 * 2;
-	// Decrease amount by 30% each epoch
-	const long double r = 1 + (std::log(1 - 0.3) / epoch);
-	return reward * std::pow(r, height);
-}
-```
+### Automated Testing
 
-Graph for reward and total supply:
+Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
+submit new unit tests for old code. Unit tests can be compiled and run
+(assuming they weren't disabled in configure) with: `make check`. Further details on running
+and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
 
-![Emission](https://i.imgur.com/emnp0s3.png)
+There are also [regression and integration tests](/test), written
+in Python.
+These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
 
-### Block size
+The CI (Continuous Integration) systems make sure that every pull request is built for Windows, Linux, and macOS,
+and that unit/sanity tests are run automatically.
 
-To make network more reliable, prevent block spamming and create better fee market block size will be decreased to 300kb.
+### Manual Quality Assurance (QA) Testing
 
-[Reference implementation](https://github.com/bitcoin/bitcoin/compare/v0.17.1...luke-jr:example_300k-0.17).
+Changes should be tested by somebody other than the developer who wrote the
+code. This is especially important for large or high-risk changes. It is useful
+to add a test plan to the pull request description if testing the changes is
+not straightforward.
 
-### Power2b PoW
+Translations
+------------
 
-Rainforest v2 aka RFv2 is causing inefficiently slow validation of blocks thats why YesPower was picked as new PoW algo.
+Changes to translations as well as new translations can be submitted to
+[Bitcoin Core's Transifex page](https://www.transifex.com/bitcoin/bitcoin/).
 
-Yespower in particular is designed to be CPU-friendly, GPU-unfriendly, and FPGA/ASIC-neutral. In other words, it's meant to be relatively efficient to compute on current CPUs and relatively inefficient on current GPUs. Unfortunately, being GPU-unfriendly also means that eventual FPGA and ASIC implementations will only compete with CPUs, and at least ASICs will win over the CPUs (FPGAs might not because of this market's peculiarities - large FPGAs are even more "over-priced" than large CPUs are), albeit by far not to the extent they did e.g. for Bitcoin and Litecoin.
+Translations are periodically pulled from Transifex and merged into the git repository. See the
+[translation process](doc/translation_process.md) for details on how this works.
 
-We are using [Power2b](https://github.com/volbil/yespower/) modification which is replaces sha256 with blake2b.
-
-[Source](https://www.openwall.com/yespower/).
+**Important**: We do not accept translation changes as GitHub pull requests because the next
+pull from Transifex would automatically overwrite them again.

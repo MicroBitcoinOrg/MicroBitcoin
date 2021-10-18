@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2018 The Bitcoin Core developers
+// Copyright (c) 2011-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_TRANSACTIONTABLEMODEL_H
-#define MICRO_QT_TRANSACTIONTABLEMODEL_H
+#ifndef BITCOIN_QT_TRANSACTIONTABLEMODEL_H
+#define BITCOIN_QT_TRANSACTIONTABLEMODEL_H
 
 #include <qt/bitcoinunits.h>
 
@@ -28,7 +28,7 @@ class TransactionTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit TransactionTableModel(const PlatformStyle *platformStyle, WalletModel *parent = 0);
+    explicit TransactionTableModel(const PlatformStyle *platformStyle, WalletModel *parent = nullptr);
     ~TransactionTableModel();
 
     enum ColumnIndex {
@@ -76,11 +76,11 @@ public:
         RawDecorationRole,
     };
 
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const override;
     bool processingQueuedTransactions() const { return fProcessingQueuedTransactions; }
 
 private:
@@ -101,7 +101,7 @@ private:
     QString formatTxDate(const TransactionRecord *wtx) const;
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
-    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::separatorStandard) const;
+    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, BitcoinUnits::SeparatorStyle separators=BitcoinUnits::SeparatorStyle::STANDARD) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QVariant txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;
@@ -120,4 +120,4 @@ public Q_SLOTS:
     friend class TransactionTablePriv;
 };
 
-#endif // MICRO_QT_TRANSACTIONTABLEMODEL_H
+#endif // BITCOIN_QT_TRANSACTIONTABLEMODEL_H

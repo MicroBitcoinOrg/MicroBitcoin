@@ -1,16 +1,14 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2018 The Bitcoin Core developers
-// Copyright (c) 2019 MicroBitcoin developers
+// Copyright (c) 2009-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_PRIMITIVES_BLOCK_H
-#define MICRO_PRIMITIVES_BLOCK_H
+#ifndef BITCOIN_PRIMITIVES_BLOCK_H
+#define BITCOIN_PRIMITIVES_BLOCK_H
 
 #include <primitives/transaction.h>
 #include <serialize.h>
 #include <uint256.h>
-#include <sync.h>
 
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
@@ -19,7 +17,7 @@
  * in the block is a special one that creates a new coin owned by the creator
  * of the block.
  */
-class CBlockHeaderUncached
+class CBlockHeader
 {
 public:
     // header
@@ -30,22 +28,12 @@ public:
     uint32_t nBits;
     uint32_t nNonce;
 
-    CBlockHeaderUncached()
+    CBlockHeader()
     {
         SetNull();
     }
 
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(this->nVersion);
-        READWRITE(hashPrevBlock);
-        READWRITE(hashMerkleRoot);
-        READWRITE(nTime);
-        READWRITE(nBits);
-        READWRITE(nNonce);
-    }
+    SERIALIZE_METHODS(CBlockHeader, obj) { READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot, obj.nTime, obj.nBits, obj.nNonce); }
 
     void SetNull()
     {
@@ -62,43 +50,12 @@ public:
         return (nBits == 0);
     }
 
-    uint256 GetIndexHash() const;
-    uint256 GetWorkHash() const;
+    uint256 GetHash() const;
 
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
     }
-};
-
-
-class CBlockHeader : public CBlockHeaderUncached
-{
-public:
-    mutable CCriticalSection cacheLock;
-    mutable bool cacheInit;
-    mutable uint256 cacheIndexHash, cacheWorkHash;
-
-    CBlockHeader()
-    {
-        cacheInit = false;
-    }
-
-    CBlockHeader(const CBlockHeader& header)
-    {
-        *this = header;
-    }
-
-    CBlockHeader& operator=(const CBlockHeader& header)
-    {
-        *(CBlockHeaderUncached*)this = (CBlockHeaderUncached)header;
-        cacheInit = header.cacheInit;
-        cacheIndexHash = header.cacheIndexHash;
-        cacheWorkHash = header.cacheWorkHash;
-        return *this;
-    }
-
-    uint256 GetWorkHashCached() const;
 };
 
 
@@ -122,12 +79,10 @@ public:
         *(static_cast<CBlockHeader*>(this)) = header;
     }
 
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITEAS(CBlockHeader, *this);
-        READWRITE(vtx);
+    SERIALIZE_METHODS(CBlock, obj)
+    {
+        READWRITEAS(CBlockHeader, obj);
+        READWRITE(obj.vtx);
     }
 
     void SetNull()
@@ -164,14 +119,12 @@ struct CBlockLocator
 
     explicit CBlockLocator(const std::vector<uint256>& vHaveIn) : vHave(vHaveIn) {}
 
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    SERIALIZE_METHODS(CBlockLocator, obj)
+    {
         int nVersion = s.GetVersion();
         if (!(s.GetType() & SER_GETHASH))
             READWRITE(nVersion);
-        READWRITE(vHave);
+        READWRITE(obj.vHave);
     }
 
     void SetNull()
@@ -185,4 +138,4 @@ struct CBlockLocator
     }
 };
 
-#endif // MICRO_PRIMITIVES_BLOCK_H
+#endif // BITCOIN_PRIMITIVES_BLOCK_H

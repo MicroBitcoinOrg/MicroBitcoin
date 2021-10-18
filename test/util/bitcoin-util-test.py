@@ -9,14 +9,9 @@ Runs automatically during `make check`.
 
 Can also be run manually."""
 
-from __future__ import division,print_function,unicode_literals
-
 import argparse
 import binascii
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import configparser
 import difflib
 import json
 import logging
@@ -28,7 +23,7 @@ import sys
 def main():
     config = configparser.ConfigParser()
     config.optionxform = str
-    config.readfp(open(os.path.join(os.path.dirname(__file__), "../config.ini"), encoding="utf8"))
+    config.read_file(open(os.path.join(os.path.dirname(__file__), "../config.ini"), encoding="utf8"))
     env_conf = dict(config.items('environment'))
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -157,7 +152,7 @@ def bctest(testDir, testObj, buildenv):
         want_error = testObj["error_txt"]
         # Compare error text
         # TODO: ideally, we'd compare the strings exactly and also assert
-        # That stderr is empty if no errors are expected. However, micro-tx
+        # That stderr is empty if no errors are expected. However, bitcoin-tx
         # emits DISPLAY errors when running as a windows application on
         # linux through wine. Just assert that the expected error text appears
         # somewhere in stderr.

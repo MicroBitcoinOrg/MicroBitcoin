@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2014 The Bitcoin Core developers
+// Copyright (c) 2011-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_MICROADDRESSVALIDATOR_H
-#define MICRO_QT_MICROADDRESSVALIDATOR_H
+#ifndef BITCOIN_QT_BITCOINADDRESSVALIDATOR_H
+#define BITCOIN_QT_BITCOINADDRESSVALIDATOR_H
 
 #include <QValidator>
 
@@ -17,10 +17,10 @@ class BitcoinAddressEntryValidator : public QValidator
 public:
     explicit BitcoinAddressEntryValidator(QObject *parent);
 
-    State validate(QString &input, int &pos) const;
+    State validate(QString &input, int &pos) const override;
 };
 
-/** MicroBitcoin address widget validator, checks for a valid bitcoin address.
+/** Bitcoin address widget validator, checks for a valid bitcoin address.
  */
 class BitcoinAddressCheckValidator : public QValidator
 {
@@ -29,7 +29,7 @@ class BitcoinAddressCheckValidator : public QValidator
 public:
     explicit BitcoinAddressCheckValidator(QObject *parent);
 
-    State validate(QString &input, int &pos) const;
+    State validate(QString &input, int &pos) const override;
 };
 
-#endif // MICRO_QT_MICROADDRESSVALIDATOR_H
+#endif // BITCOIN_QT_BITCOINADDRESSVALIDATOR_H

@@ -3,40 +3,40 @@
 # backward compatibility for existing gentoo layout 
 #
 if [ -d "/var/lib/bitcoin/.bitcoin" ]; then
-	MICROD_DEFAULT_DATADIR="/var/lib/bitcoin/.bitcoin"
+	BITCOIND_DEFAULT_DATADIR="/var/lib/bitcoin/.bitcoin"
 else
-	MICROD_DEFAULT_DATADIR="/var/lib/microd"
+	BITCOIND_DEFAULT_DATADIR="/var/lib/bitcoind"
 fi
 
-MICROD_CONFIGFILE=${MICROD_CONFIGFILE:-/etc/bitcoin/bitcoin.conf}
-MICROD_PIDDIR=${MICROD_PIDDIR:-/var/run/microd}
-MICROD_PIDFILE=${MICROD_PIDFILE:-${MICROD_PIDDIR}/microd.pid}
-MICROD_DATADIR=${MICROD_DATADIR:-${MICROD_DEFAULT_DATADIR}}
-MICROD_USER=${MICROD_USER:-${MICRO_USER:-bitcoin}}
-MICROD_GROUP=${MICROD_GROUP:-bitcoin}
-MICROD_BIN=${MICROD_BIN:-/usr/bin/microd}
-MICROD_NICE=${MICROD_NICE:-${NICELEVEL:-0}}
-MICROD_OPTS="${MICROD_OPTS:-${MICRO_OPTS}}"
+BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/bitcoin/bitcoin.conf}
+BITCOIND_PIDDIR=${BITCOIND_PIDDIR:-/var/run/bitcoind}
+BITCOIND_PIDFILE=${BITCOIND_PIDFILE:-${BITCOIND_PIDDIR}/bitcoind.pid}
+BITCOIND_DATADIR=${BITCOIND_DATADIR:-${BITCOIND_DEFAULT_DATADIR}}
+BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-bitcoin}}
+BITCOIND_GROUP=${BITCOIND_GROUP:-bitcoin}
+BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/bitcoind}
+BITCOIND_NICE=${BITCOIND_NICE:-${NICELEVEL:-0}}
+BITCOIND_OPTS="${BITCOIND_OPTS:-${BITCOIN_OPTS}}"
 
 name="Bitcoin Core Daemon"
 description="Bitcoin cryptocurrency P2P network daemon"
 
-command="/usr/bin/microd"
-command_args="-pid=\"${MICROD_PIDFILE}\" \
-		-conf=\"${MICROD_CONFIGFILE}\" \
-		-datadir=\"${MICROD_DATADIR}\" \
+command="/usr/bin/bitcoind"
+command_args="-pid=\"${BITCOIND_PIDFILE}\" \
+		-conf=\"${BITCOIND_CONFIGFILE}\" \
+		-datadir=\"${BITCOIND_DATADIR}\" \
 		-daemon \
-		${MICROD_OPTS}"
+		${BITCOIND_OPTS}"
 
-required_files="${MICROD_CONFIGFILE}"
-start_stop_daemon_args="-u ${MICROD_USER} \
-			-N ${MICROD_NICE} -w 2000"
-pidfile="${MICROD_PIDFILE}"
+required_files="${BITCOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${BITCOIND_USER} \
+			-N ${BITCOIND_NICE} -w 2000"
+pidfile="${BITCOIND_PIDFILE}"
 
 # The retry schedule to use when stopping the daemon. Could be either
 # a timeout in seconds or multiple signal/timeout pairs (like
 # "SIGKILL/180 SIGTERM/300")
-retry="${MICROD_SIGTERM_TIMEOUT}"
+retry="${BITCOIND_SIGTERM_TIMEOUT}"
 
 depend() {
 	need localmount net
@@ -50,29 +50,30 @@ start_pre() {
 	checkpath \
 	-d \
 	--mode 0750 \
-	--owner "${MICROD_USER}:${MICROD_GROUP}" \
-	"${MICROD_DATADIR}"
+	--owner "${BITCOIND_USER}:${BITCOIND_GROUP}" \
+	"${BITCOIND_DATADIR}"
 
 	checkpath \
 	-d \
 	--mode 0755 \
-	--owner "${MICROD_USER}:${MICROD_GROUP}" \
-	"${MICROD_PIDDIR}"
+	--owner "${BITCOIND_USER}:${BITCOIND_GROUP}" \
+	"${BITCOIND_PIDDIR}"
 
 	checkpath -f \
-	-o ${MICROD_USER}:${MICROD_GROUP} \
+	-o "${BITCOIND_USER}:${BITCOIND_GROUP}" \
 	-m 0660 \
-	${MICROD_CONFIGFILE}
+	"${BITCOIND_CONFIGFILE}"
 
 	checkconfig || return 1
 }
 
 checkconfig()
 {
-	if ! grep -qs '^rpcpassword=' "${MICROD_CONFIGFILE}" ; then
+	if grep -qs '^rpcuser=' "${BITCOIND_CONFIGFILE}" && \
+		! grep -qs '^rpcpassword=' "${BITCOIND_CONFIGFILE}" ; then
 		eerror ""
-		eerror "ERROR: You must set a secure rpcpassword to run microd."
-		eerror "The setting must appear in ${MICROD_CONFIGFILE}"
+		eerror "ERROR: You must set a secure rpcpassword to run bitcoind."
+		eerror "The setting must appear in ${BITCOIND_CONFIGFILE}"
 		eerror ""
 		eerror "This password is security critical to securing wallets "
 		eerror "and must not be the same as the rpcuser setting."

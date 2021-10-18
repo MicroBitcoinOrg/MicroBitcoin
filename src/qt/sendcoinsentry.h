@@ -1,16 +1,20 @@
-// Copyright (c) 2011-2018 The Bitcoin Core developers
+// Copyright (c) 2011-2019 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_SENDCOINSENTRY_H
-#define MICRO_QT_SENDCOINSENTRY_H
+#ifndef BITCOIN_QT_SENDCOINSENTRY_H
+#define BITCOIN_QT_SENDCOINSENTRY_H
 
-#include <qt/walletmodel.h>
+#include <qt/sendcoinsrecipient.h>
 
 #include <QStackedWidget>
 
 class WalletModel;
 class PlatformStyle;
+
+namespace interfaces {
+class Node;
+} // namespace interfaces
 
 namespace Ui {
     class SendCoinsEntry;
@@ -26,7 +30,7 @@ class SendCoinsEntry : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *parent = nullptr);
     ~SendCoinsEntry();
 
     void setModel(WalletModel *model);
@@ -65,6 +69,9 @@ private Q_SLOTS:
     void on_pasteButton_clicked();
     void updateDisplayUnit();
 
+protected:
+    void changeEvent(QEvent* e) override;
+
 private:
     SendCoinsRecipient recipient;
     Ui::SendCoinsEntry *ui;
@@ -74,4 +81,4 @@ private:
     bool updateLabel(const QString &address);
 };
 
-#endif // MICRO_QT_SENDCOINSENTRY_H
+#endif // BITCOIN_QT_SENDCOINSENTRY_H

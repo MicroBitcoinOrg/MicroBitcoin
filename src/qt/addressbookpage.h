@@ -1,9 +1,9 @@
-// Copyright (c) 2011-2018 The Bitcoin Core developers
+// Copyright (c) 2011-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_QT_ADDRESSBOOKPAGE_H
-#define MICRO_QT_ADDRESSBOOKPAGE_H
+#ifndef BITCOIN_QT_ADDRESSBOOKPAGE_H
+#define BITCOIN_QT_ADDRESSBOOKPAGE_H
 
 #include <QDialog>
 
@@ -38,14 +38,14 @@ public:
         ForEditing  /**< Open address book for editing */
     };
 
-    explicit AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent = 0);
+    explicit AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent = nullptr);
     ~AddressBookPage();
 
     void setModel(AddressTableModel *model);
     const QString &getReturnValue() const { return returnValue; }
 
 public Q_SLOTS:
-    void done(int retval);
+    void done(int retval) override;
 
 private:
     Ui::AddressBookPage *ui;
@@ -55,7 +55,6 @@ private:
     QString returnValue;
     AddressBookSortFilterProxyModel *proxyModel;
     QMenu *contextMenu;
-    QAction *deleteAction; // to be able to explicitly disable it
     QString newAddressToSelect;
 
 private Q_SLOTS:
@@ -83,4 +82,4 @@ Q_SIGNALS:
     void sendCoins(QString addr);
 };
 
-#endif // MICRO_QT_ADDRESSBOOKPAGE_H
+#endif // BITCOIN_QT_ADDRESSBOOKPAGE_H

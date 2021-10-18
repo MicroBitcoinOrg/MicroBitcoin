@@ -1,14 +1,12 @@
-// Copyright (c) 2015-2018 The Bitcoin Core developers
+// Copyright (c) 2015-2019 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MICRO_CONSENSUS_MERKLE_H
-#define MICRO_CONSENSUS_MERKLE_H
+#ifndef BITCOIN_CONSENSUS_MERKLE_H
+#define BITCOIN_CONSENSUS_MERKLE_H
 
-#include <stdint.h>
 #include <vector>
 
-#include <primitives/transaction.h>
 #include <primitives/block.h>
 #include <uint256.h>
 
@@ -26,4 +24,4 @@ uint256 BlockMerkleRoot(const CBlock& block, bool* mutated = nullptr);
  */
 uint256 BlockWitnessMerkleRoot(const CBlock& block, bool* mutated = nullptr);
 
-#endif // MICRO_CONSENSUS_MERKLE_H
+#endif // BITCOIN_CONSENSUS_MERKLE_H

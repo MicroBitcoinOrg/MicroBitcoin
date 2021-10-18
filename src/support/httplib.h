@@ -178,10 +178,9 @@ using socket_t = SOCKET;
 #include <unistd.h>
 
 using socket_t = int;
-#ifndef HTTP_INVALID_SOCKET
-#define HTTP_INVALID_SOCKET (-1)
-#endif
 #endif //_WIN32
+
+#define HTTP_INVALID_SOCKET (-1)
 
 #include <algorithm>
 #include <array>

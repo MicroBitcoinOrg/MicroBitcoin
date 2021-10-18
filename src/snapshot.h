@@ -6,7 +6,6 @@
 #define MICRO_SNAPSHOT_H
 
 #include <primitives/transaction.h>
-#include <util.h>
 #include <fs.h>
 
 struct SnapshotEntry {

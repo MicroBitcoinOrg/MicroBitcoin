@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 '''
-Compact, self-contained ELF implementation for bitcoin-core security checks.
+Compact, self-contained ELF implementation for micro-core security checks.
 '''
 import struct
 import types

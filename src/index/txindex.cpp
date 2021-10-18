@@ -252,6 +252,6 @@ bool TxIndex::FindTx(const uint256& tx_hash, uint256& block_hash, CTransactionRe
     if (tx->GetHash() != tx_hash) {
         return error("%s: txid mismatch", __func__);
     }
-    block_hash = header.GetHash();
+    block_hash = header.GetIndexHash();
     return true;
 }

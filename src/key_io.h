@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KEY_IO_H
-#define BITCOIN_KEY_IO_H
+#ifndef MICRO_KEY_IO_H
+#define MICRO_KEY_IO_H
 
 #include <chainparams.h>
 #include <key.h>
@@ -27,4 +27,4 @@ CTxDestination DecodeDestination(const std::string& str, std::string& error_msg)
 bool IsValidDestinationString(const std::string& str);
 bool IsValidDestinationString(const std::string& str, const CChainParams& params);
 
-#endif // BITCOIN_KEY_IO_H
+#endif // MICRO_KEY_IO_H

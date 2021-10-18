@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_HASH_H
-#define BITCOIN_HASH_H
+#ifndef MICRO_HASH_H
+#define MICRO_HASH_H
 
 #include <attributes.h>
 #include <crypto/common.h>
@@ -18,9 +18,19 @@
 #include <string>
 #include <vector>
 
+#define BEGIN(a)            ((char*)&(a))
+#define END(a)              ((char*)&((&(a))[1]))
+#define UBEGIN(a)           ((unsigned char*)&(a))
+#define UEND(a)             ((unsigned char*)&((&(a))[1]))
+#define ARRAYLEN(array)     (sizeof(array)/sizeof((array)[0]))
+
+extern "C" {
+#include <crypto/blake2b.h>
+} // "C"
+
 typedef uint256 ChainCode;
 
-/** A hasher class for Bitcoin's 256-bit hash (double SHA-256). */
+/** A hasher class for MicroBitcoin's 256-bit hash (double SHA-256). */
 class CHash256 {
 private:
     CSHA256 sha;
@@ -45,7 +55,7 @@ public:
     }
 };
 
-/** A hasher class for Bitcoin's 160-bit hash (SHA-256 + RIPEMD-160). */
+/** A hasher class for MicroBitcoin's 160-bit hash (SHA-256 + RIPEMD-160). */
 class CHash160 {
 private:
     CSHA256 sha;
@@ -211,4 +221,22 @@ void BIP32Hash(const ChainCode &chainCode, unsigned int nChild, unsigned char he
  */
 CHashWriter TaggedHash(const std::string& tag);
 
-#endif // BITCOIN_HASH_H
+/** Blake2b hash wrapper */
+template <typename T>
+inline uint256 Blake2b(const T* pbegin, const T* pend)
+{
+    static T pblank[1];
+    blake2b_ctx ctx;
+    uint256 hash;
+
+    const void* block = pbegin == pend ? pblank : pbegin;
+    size_t      length  = (pend - pbegin) * sizeof(T);
+
+    blake2b_init(&ctx, 32, NULL, 0);
+    blake2b_update(&ctx, block, length);
+    blake2b_final(&ctx, hash.begin());
+
+    return hash;
+}
+
+#endif // MICRO_HASH_H

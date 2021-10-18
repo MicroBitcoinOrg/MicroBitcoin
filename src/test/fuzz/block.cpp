@@ -54,7 +54,7 @@ FUZZ_TARGET_INIT(block, initialize_block)
     } else if (valid_incl_merkle || valid_incl_pow) {
         assert(valid_incl_none);
     }
-    (void)block.GetHash();
+    (void)block.GetIndexHash();
     (void)block.ToString();
     (void)BlockMerkleRoot(block);
     if (!block.vtx.empty()) {

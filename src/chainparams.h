@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHAINPARAMS_H
-#define BITCOIN_CHAINPARAMS_H
+#ifndef MICRO_CHAINPARAMS_H
+#define MICRO_CHAINPARAMS_H
 
 #include <chainparamsbase.h>
 #include <consensus/params.h>
@@ -12,6 +12,7 @@
 #include <primitives/block.h>
 #include <protocol.h>
 #include <util/hash_type.h>
+#include <snapshot.h>
 
 #include <memory>
 #include <string>
@@ -64,7 +65,7 @@ struct ChainTxData {
 
 /**
  * CChainParams defines various tweakable parameters of a given instance of the
- * Bitcoin system.
+ * MicroBitcoin system.
  */
 class CChainParams
 {
@@ -137,6 +138,7 @@ protected:
     std::string strNetworkID;
     CBlock genesis;
     std::vector<uint8_t> vFixedSeeds;
+    std::vector<SnapshotEntry> vSnapshot;
     bool fDefaultConsistencyChecks;
     bool fRequireStandard;
     bool m_is_test_chain;
@@ -165,4 +167,4 @@ const CChainParams &Params();
  */
 void SelectParams(const std::string& chain);
 
-#endif // BITCOIN_CHAINPARAMS_H
+#endif // MICRO_CHAINPARAMS_H

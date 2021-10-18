@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2020 The Bitcoin Core developers
+# Copyright (c) 2015-2020 The MicroBitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test CSV soft fork activation.
@@ -50,7 +50,7 @@ from test_framework.script import (
     OP_CHECKSEQUENCEVERIFY,
     OP_DROP,
 )
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import MicroBitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     softfork_active,
@@ -87,7 +87,7 @@ def all_rlt_txs(txs):
     return [tx['tx'] for tx in txs]
 
 
-class BIP68_112_113Test(BitcoinTestFramework):
+class BIP68_112_113Test(MicroBitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

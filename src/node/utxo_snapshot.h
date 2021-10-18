@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_UTXO_SNAPSHOT_H
-#define BITCOIN_NODE_UTXO_SNAPSHOT_H
+#ifndef MICRO_NODE_UTXO_SNAPSHOT_H
+#define MICRO_NODE_UTXO_SNAPSHOT_H
 
 #include <uint256.h>
 #include <serialize.h>
@@ -33,4 +33,4 @@ public:
     SERIALIZE_METHODS(SnapshotMetadata, obj) { READWRITE(obj.m_base_blockhash, obj.m_coins_count); }
 };
 
-#endif // BITCOIN_NODE_UTXO_SNAPSHOT_H
+#endif // MICRO_NODE_UTXO_SNAPSHOT_H

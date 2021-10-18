@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_CONTEXT_H
-#define BITCOIN_NODE_CONTEXT_H
+#ifndef MICRO_NODE_CONTEXT_H
+#define MICRO_NODE_CONTEXT_H
 
 #include <cassert>
 #include <functional>
@@ -63,4 +63,4 @@ struct NodeContext {
     ~NodeContext();
 };
 
-#endif // BITCOIN_NODE_CONTEXT_H
+#endif // MICRO_NODE_CONTEXT_H

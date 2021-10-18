@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHAIN_H
-#define BITCOIN_CHAIN_H
+#ifndef MICRO_CHAIN_H
+#define MICRO_CHAIN_H
 
 #include <arith_uint256.h>
 #include <consensus/params.h>
@@ -33,7 +33,7 @@ static constexpr int64_t TIMESTAMP_WINDOW = MAX_FUTURE_BLOCK_TIME;
  * Maximum gap between node time and block time used
  * for the "Catching up..." mode in GUI.
  *
- * Ref: https://github.com/bitcoin/bitcoin/pull/1026
+ * Ref: https://github.com/MicroBitcoinOrg/MicroBitcoin/pull/1026
  */
 static constexpr int64_t MAX_BLOCK_TIME_GAP = 90 * 60;
 
@@ -193,6 +193,10 @@ public:
     uint32_t nBits{0};
     uint32_t nNonce{0};
 
+    //! (memory only)
+    bool cacheInit{false};
+    uint256 cacheIndexHash, cacheWorkHash;
+
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     int32_t nSequenceId{0};
 
@@ -208,7 +212,10 @@ public:
           hashMerkleRoot{block.hashMerkleRoot},
           nTime{block.nTime},
           nBits{block.nBits},
-          nNonce{block.nNonce}
+          nNonce{block.nNonce},
+          cacheInit{block.cacheInit},
+          cacheIndexHash{block.cacheIndexHash},
+          cacheWorkHash{block.cacheWorkHash}
     {
     }
 
@@ -240,6 +247,9 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+        block.cacheInit      = cacheInit;
+        block.cacheIndexHash = cacheIndexHash;
+        block.cacheWorkHash  = cacheWorkHash;
         return block;
     }
 
@@ -256,6 +266,11 @@ public:
      * Does not imply the transactions are still stored on disk. (IsBlockPruned might return true)
      */
     bool HaveTxsDownloaded() const { return nChainTx != 0; }
+
+    uint256 GetBlockWorkHash() const
+    {
+        return GetBlockHeader().GetWorkHash();
+    }
 
     int64_t GetBlockTime() const
     {
@@ -373,9 +388,22 @@ public:
         block.nTime           = nTime;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
-        return block.GetHash();
+
+        return block.GetIndexHash();
     }
 
+    uint256 GetBlockWorkHash() const
+    {
+        CBlockHeader block;
+        block.nVersion        = nVersion;
+        block.hashPrevBlock   = hashPrev;
+        block.hashMerkleRoot  = hashMerkleRoot;
+        block.nTime           = nTime;
+        block.nBits           = nBits;
+        block.nNonce          = nNonce;
+
+        return block.GetWorkHash();
+    }
 
     std::string ToString() const
     {
@@ -442,4 +470,4 @@ public:
     CBlockIndex* FindEarliestAtLeast(int64_t nTime, int height) const;
 };
 
-#endif // BITCOIN_CHAIN_H
+#endif // MICRO_CHAIN_H

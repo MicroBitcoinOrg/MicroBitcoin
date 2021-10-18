@@ -47,7 +47,7 @@
 #include <warnings.h>
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/micro-config.h>
 #endif
 
 #include <any>
@@ -212,7 +212,7 @@ public:
     uint256 getBestBlockHash() override
     {
         const CBlockIndex* tip = WITH_LOCK(::cs_main, return chainman().ActiveChain().Tip());
-        return tip ? tip->GetBlockHash() : Params().GenesisBlock().GetHash();
+        return tip ? tip->GetBlockHash() : Params().GenesisBlock().GetIndexHash();
     }
     int64_t getLastBlockTime() override
     {

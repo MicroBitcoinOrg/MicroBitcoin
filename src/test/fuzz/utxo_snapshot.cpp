@@ -56,7 +56,7 @@ FUZZ_TARGET_INIT(utxo_snapshot, initialize_chain)
             BlockValidationState dummy;
             bool processed{chainman.ProcessNewBlockHeaders({*block}, dummy, ::Params())};
             Assert(processed);
-            const auto* index{WITH_LOCK(::cs_main, return chainman.m_blockman.LookupBlockIndex(block->GetHash()))};
+            const auto* index{WITH_LOCK(::cs_main, return chainman.m_blockman.LookupBlockIndex(block->GetIndexHash()))};
             Assert(index);
         }
     }
@@ -70,7 +70,7 @@ FUZZ_TARGET_INIT(utxo_snapshot, initialize_chain)
         int64_t chain_tx{};
         for (const auto& block : *g_chain) {
             Assert(coinscache.HaveCoin(COutPoint{block->vtx.at(0)->GetHash(), 0}));
-            const auto* index{chainman.m_blockman.LookupBlockIndex(block->GetHash())};
+            const auto* index{chainman.m_blockman.LookupBlockIndex(block->GetIndexHash())};
             const auto num_tx{Assert(index)->nTx};
             Assert(num_tx == 1);
             chain_tx += num_tx;

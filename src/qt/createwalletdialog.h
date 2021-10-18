@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_CREATEWALLETDIALOG_H
-#define BITCOIN_QT_CREATEWALLETDIALOG_H
+#ifndef MICRO_QT_CREATEWALLETDIALOG_H
+#define MICRO_QT_CREATEWALLETDIALOG_H
 
 #include <QDialog>
 
@@ -38,4 +38,4 @@ private:
     bool m_has_signers = false;
 };
 
-#endif // BITCOIN_QT_CREATEWALLETDIALOG_H
+#endif // MICRO_QT_CREATEWALLETDIALOG_H

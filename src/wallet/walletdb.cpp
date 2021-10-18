@@ -21,6 +21,7 @@
 #include <wallet/sqlite.h>
 #endif
 #include <wallet/wallet.h>
+#include <chainparams.h>
 
 #include <atomic>
 #include <optional>
@@ -336,8 +337,12 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             auto fill_wtx = [&](CWalletTx& wtx, bool new_tx) {
                 assert(new_tx);
                 ssValue >> wtx;
-                if (wtx.GetHash() != hash)
-                    return false;
+
+                // Don't check genesis transaction
+                if (wtx.m_confirm.hashBlock != Params().GetConsensus().hashGenesisBlock) {
+                    if (wtx.GetHash() != hash)
+                        return false;
+                }
 
                 // Undo serialize changes in 31600
                 if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
@@ -488,7 +493,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             if (keyMeta.nVersion >= CKeyMetadata::VERSION_WITH_HDDATA && !keyMeta.hd_seed_id.IsNull() && keyMeta.hdKeypath.size() > 0) {
                 // Get the path from the key origin or from the path string
                 // Not applicable when path is "s" or "m" as those indicate a seed
-                // See https://github.com/bitcoin/bitcoin/pull/12924
+                // See https://github.com/MicroBitcoinOrg/MicroBitcoin/pull/12924
                 bool internal = false;
                 uint32_t index = 0;
                 if (keyMeta.hdKeypath != "s" && keyMeta.hdKeypath != "m") {

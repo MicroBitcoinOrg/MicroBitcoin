@@ -2,7 +2,7 @@ OpenBSD build guide
 ======================
 (updated for OpenBSD 6.9)
 
-This guide describes how to build bitcoind, bitcoin-qt, and command-line utilities on OpenBSD.
+This guide describes how to build microd, micro-qt, and command-line utilities on OpenBSD.
 
 Preparation
 -------------
@@ -17,7 +17,7 @@ pkg_add automake # (select highest version, e.g. 1.16)
 pkg_add python # (select highest version, e.g. 3.8)
 pkg_add bash
 
-git clone https://github.com/bitcoin/bitcoin.git
+git clone https://github.com/MicroBitcoinOrg/MicroBitcoin.git
 ```
 
 See [dependencies.md](dependencies.md) for a complete overview.
@@ -48,7 +48,7 @@ from the root of the repository. Then set `BDB_PREFIX` for the next section:
 export BDB_PREFIX="$PWD/db4"
 ```
 
-### Building Bitcoin Core
+### Building MicroBitcoin Core
 
 **Important**: Use `gmake` (the non-GNU `make` will exit with an error).
 
@@ -112,7 +112,7 @@ The standard ulimit restrictions in OpenBSD are very strict:
     data(kbytes)         1572864
 
 This is, unfortunately, in some cases not enough to compile some `.cpp` files in the project,
-(see issue [#6658](https://github.com/bitcoin/bitcoin/issues/6658)).
+(see issue [#6658](https://github.com/MicroBitcoinOrg/MicroBitcoin/issues/6658)).
 If your user is in the `staff` group the limit can be raised with:
 
     ulimit -d 3000000

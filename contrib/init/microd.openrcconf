@@ -1,0 +1,33 @@
+# /etc/conf.d/microd: config file for /etc/init.d/microd
+
+# Config file location
+#MICROD_CONFIGFILE="/etc/micro/micro.conf"
+
+# What directory to write pidfile to?  (created and owned by $MICROD_USER)
+#MICROD_PIDDIR="/var/run/microd"
+
+# What filename to give the pidfile
+#MICROD_PIDFILE="${MICROD_PIDDIR}/microd.pid"
+
+# Where to write microd data (be mindful that the blockchain is large)
+#MICROD_DATADIR="/var/lib/microd"
+
+# User and group to own microd process
+#MICROD_USER="micro"
+#MICROD_GROUP="micro"
+
+# Path to microd executable
+#MICROD_BIN="/usr/bin/microd"
+
+# Nice value to run microd under
+#MICROD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#MICROD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for microd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+MICROD_SIGTERM_TIMEOUT=600

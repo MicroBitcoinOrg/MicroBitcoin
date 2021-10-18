@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INTERFACES_WALLET_H
-#define BITCOIN_INTERFACES_WALLET_H
+#ifndef MICRO_INTERFACES_WALLET_H
+#define MICRO_INTERFACES_WALLET_H
 
 #include <amount.h>                    // For CAmount
 #include <interfaces/chain.h>          // For ChainClient
@@ -418,4 +418,4 @@ std::unique_ptr<WalletClient> MakeWalletClient(Chain& chain, ArgsManager& args);
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_WALLET_H
+#endif // MICRO_INTERFACES_WALLET_H

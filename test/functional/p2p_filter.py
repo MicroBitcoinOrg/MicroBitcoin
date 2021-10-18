@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020 The Bitcoin Core developers
+# Copyright (c) 2020 The MicroBitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """
@@ -27,7 +27,7 @@ from test_framework.p2p import (
     p2p_lock,
 )
 from test_framework.script import MAX_SCRIPT_ELEMENT_SIZE
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import MicroBitcoinTestFramework
 
 
 class P2PBloomFilter(P2PInterface):
@@ -85,7 +85,7 @@ class P2PBloomFilter(P2PInterface):
             self._merkleblock_received = value
 
 
-class FilterTest(BitcoinTestFramework):
+class FilterTest(MicroBitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [[

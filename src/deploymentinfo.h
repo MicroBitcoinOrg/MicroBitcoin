@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_DEPLOYMENTINFO_H
-#define BITCOIN_DEPLOYMENTINFO_H
+#ifndef MICRO_DEPLOYMENTINFO_H
+#define MICRO_DEPLOYMENTINFO_H
 
 #include <consensus/params.h>
 
@@ -26,4 +26,4 @@ inline std::string DeploymentName(Consensus::DeploymentPos pos)
     return VersionBitsDeploymentInfo[pos].name;
 }
 
-#endif // BITCOIN_DEPLOYMENTINFO_H
+#endif // MICRO_DEPLOYMENTINFO_H

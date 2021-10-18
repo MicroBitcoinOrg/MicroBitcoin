@@ -380,7 +380,7 @@ bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, const Consensus::P
     }
 
     // Check the header
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams)) {
+    if (!CheckProofOfWork(block.GetWorkHash(), block.nBits, consensusParams)) {
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     }
 
@@ -403,7 +403,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     if (!ReadBlockFromDisk(block, blockPos, consensusParams)) {
         return false;
     }
-    if (block.GetHash() != pindex->GetBlockHash()) {
+    if (block.GetIndexHash() != pindex->GetBlockHash()) {
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
                      pindex->ToString(), pindex->GetBlockPos().ToString());
     }
@@ -523,6 +523,20 @@ void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFile
             LogPrintf("Reindexing finished\n");
             // To avoid ending up in a situation without genesis block, re-try initializing (no-op if reindexing worked):
             chainman.ActiveChainstate().LoadGenesisBlock();
+        }
+
+        // hardcoded $DATADIR/bootstrap.dat
+        fs::path pathBootstrap = args.GetDataDirNet() / "bootstrap.dat";
+        if (fs::exists(pathBootstrap)) {
+            FILE *file = fsbridge::fopen(pathBootstrap, "rb");
+            if (file) {
+                fs::path pathBootstrapOld = args.GetDataDirNet() / "bootstrap.dat.old";
+                LogPrintf("Importing bootstrap.dat...\n");
+                chainman.ActiveChainstate().LoadExternalBlockFile(file);
+                RenameOver(pathBootstrap, pathBootstrapOld);
+            } else {
+                LogPrintf("Warning: Could not open bootstrap file %s\n", pathBootstrap.string());
+            }
         }
 
         // -loadblock=

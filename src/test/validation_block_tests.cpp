@@ -46,12 +46,12 @@ struct TestSubscriber final : public CValidationInterface {
         BOOST_CHECK_EQUAL(m_expected_tip, block->hashPrevBlock);
         BOOST_CHECK_EQUAL(m_expected_tip, pindex->pprev->GetBlockHash());
 
-        m_expected_tip = block->GetHash();
+        m_expected_tip = block->GetIndexHash();
     }
 
     void BlockDisconnected(const std::shared_ptr<const CBlock>& block, const CBlockIndex* pindex) override
     {
-        BOOST_CHECK_EQUAL(m_expected_tip, block->GetHash());
+        BOOST_CHECK_EQUAL(m_expected_tip, block->GetIndexHash());
         BOOST_CHECK_EQUAL(m_expected_tip, pindex->GetBlockHash());
 
         m_expected_tip = block->hashPrevBlock;
@@ -89,7 +89,7 @@ std::shared_ptr<CBlock> MinerTestingSetup::FinalizeBlock(std::shared_ptr<CBlock>
 
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 
-    while (!CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus())) {
+    while (!CheckProofOfWork(pblock->GetWorkHash(), pblock->nBits, Params().GetConsensus())) {
         ++(pblock->nNonce);
     }
 
@@ -128,12 +128,12 @@ void MinerTestingSetup::BuildChain(const uint256& root, int height, const unsign
     const std::shared_ptr<const CBlock> pblock = gen_invalid ? BadBlock(root) : GoodBlock(root);
     blocks.push_back(pblock);
     if (!gen_invalid) {
-        BuildChain(pblock->GetHash(), height - 1, invalid_rate, branch_rate, max_size, blocks);
+        BuildChain(pblock->GetIndexHash(), height - 1, invalid_rate, branch_rate, max_size, blocks);
     }
 
     if (gen_fork) {
         blocks.push_back(GoodBlock(root));
-        BuildChain(blocks.back()->GetHash(), height - 1, invalid_rate, branch_rate, max_size, blocks);
+        BuildChain(blocks.back()->GetIndexHash(), height - 1, invalid_rate, branch_rate, max_size, blocks);
     }
 }
 
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(processnewblock_signals_ordering)
     std::vector<std::shared_ptr<const CBlock>> blocks;
     while (blocks.size() < 50) {
         blocks.clear();
-        BuildChain(Params().GenesisBlock().GetHash(), 100, 15, 10, 500, blocks);
+        BuildChain(Params().GenesisBlock().GetIndexHash(), 100, 15, 10, 500, blocks);
     }
 
     bool ignored;
@@ -227,12 +227,12 @@ BOOST_AUTO_TEST_CASE(mempool_locks_reorg)
 
     // Process all mined blocks
     BOOST_REQUIRE(ProcessBlock(std::make_shared<CBlock>(Params().GenesisBlock())));
-    auto last_mined = GoodBlock(Params().GenesisBlock().GetHash());
+    auto last_mined = GoodBlock(Params().GenesisBlock().GetIndexHash());
     BOOST_REQUIRE(ProcessBlock(last_mined));
 
     // Run the test multiple times
     for (int test_runs = 3; test_runs > 0; --test_runs) {
-        BOOST_CHECK_EQUAL(last_mined->GetHash(), m_node.chainman->ActiveChain().Tip()->GetBlockHash());
+        BOOST_CHECK_EQUAL(last_mined->GetIndexHash(), m_node.chainman->ActiveChain().Tip()->GetBlockHash());
 
         // Later on split from here
         const uint256 split_hash{last_mined->hashPrevBlock};
@@ -248,24 +248,24 @@ BOOST_AUTO_TEST_CASE(mempool_locks_reorg)
             mtx.vout[0].nValue -= 1000;
             txs.push_back(MakeTransactionRef(mtx));
 
-            last_mined = GoodBlock(last_mined->GetHash());
+            last_mined = GoodBlock(last_mined->GetIndexHash());
             BOOST_REQUIRE(ProcessBlock(last_mined));
         }
 
         // Mature the inputs of the txs
         for (int j = COINBASE_MATURITY; j > 0; --j) {
-            last_mined = GoodBlock(last_mined->GetHash());
+            last_mined = GoodBlock(last_mined->GetIndexHash());
             BOOST_REQUIRE(ProcessBlock(last_mined));
         }
 
         // Mine a reorg (and hold it back) before adding the txs to the mempool
-        const uint256 tip_init{last_mined->GetHash()};
+        const uint256 tip_init{last_mined->GetIndexHash()};
 
         std::vector<std::shared_ptr<const CBlock>> reorg;
         last_mined = GoodBlock(split_hash);
         reorg.push_back(last_mined);
         for (size_t j = COINBASE_MATURITY + txs.size() + 1; j > 0; --j) {
-            last_mined = GoodBlock(last_mined->GetHash());
+            last_mined = GoodBlock(last_mined->GetIndexHash());
             reorg.push_back(last_mined);
         }
 
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(mempool_locks_reorg)
             ProcessBlock(b);
         }
         // Check that the reorg was eventually successful
-        BOOST_CHECK_EQUAL(last_mined->GetHash(), m_node.chainman->ActiveChain().Tip()->GetBlockHash());
+        BOOST_CHECK_EQUAL(last_mined->GetIndexHash(), m_node.chainman->ActiveChain().Tip()->GetBlockHash());
 
         // We can join the other thread, which returns when the reorg was successful
         rpc_thread.join();

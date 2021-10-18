@@ -6,8 +6,8 @@
 /**
  * Money parsing/formatting utilities.
  */
-#ifndef BITCOIN_UTIL_MONEYSTR_H
-#define BITCOIN_UTIL_MONEYSTR_H
+#ifndef MICRO_UTIL_MONEYSTR_H
+#define MICRO_UTIL_MONEYSTR_H
 
 #include <amount.h>
 #include <attributes.h>
@@ -21,4 +21,4 @@ std::string FormatMoney(const CAmount n);
 /** Parse an amount denoted in full coins. E.g. "0.0034" supplied on the command line. **/
 [[nodiscard]] bool ParseMoney(const std::string& str, CAmount& nRet);
 
-#endif // BITCOIN_UTIL_MONEYSTR_H
+#endif // MICRO_UTIL_MONEYSTR_H

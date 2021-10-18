@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020 The Bitcoin Core developers
+# Copyright (c) 2020 The MicroBitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test block-relay-only anchors functionality"""
@@ -7,7 +7,7 @@
 import os
 
 from test_framework.p2p import P2PInterface
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import MicroBitcoinTestFramework
 from test_framework.util import assert_equal
 
 INBOUND_CONNECTIONS = 5
@@ -20,7 +20,7 @@ def check_node_connections(*, node, num_in, num_out):
     assert_equal(info["connections_out"], num_out)
 
 
-class AnchorsTest(BitcoinTestFramework):
+class AnchorsTest(MicroBitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

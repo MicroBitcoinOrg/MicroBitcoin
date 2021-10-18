@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INTERFACES_NODE_H
-#define BITCOIN_INTERFACES_NODE_H
+#ifndef MICRO_INTERFACES_NODE_H
+#define MICRO_INTERFACES_NODE_H
 
 #include <amount.h>     // For CAmount
 #include <external_signer.h>
@@ -50,7 +50,7 @@ struct BlockAndHeaderTipInfo
     double verification_progress;
 };
 
-//! Top-level interface for a bitcoin node (bitcoind process).
+//! Top-level interface for a micro node (microd process).
 class Node
 {
 public:
@@ -241,4 +241,4 @@ struct BlockTip {
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_NODE_H
+#endif // MICRO_INTERFACES_NODE_H

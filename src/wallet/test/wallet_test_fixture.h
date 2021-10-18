@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_TEST_WALLET_TEST_FIXTURE_H
-#define BITCOIN_WALLET_TEST_WALLET_TEST_FIXTURE_H
+#ifndef MICRO_WALLET_TEST_WALLET_TEST_FIXTURE_H
+#define MICRO_WALLET_TEST_WALLET_TEST_FIXTURE_H
 
 #include <test/util/setup_common.h>
 
@@ -25,4 +25,4 @@ struct WalletTestingSetup : public TestingSetup {
     std::unique_ptr<interfaces::Handler> m_chain_notifications_handler;
 };
 
-#endif // BITCOIN_WALLET_TEST_WALLET_TEST_FIXTURE_H
+#endif // MICRO_WALLET_TEST_WALLET_TEST_FIXTURE_H

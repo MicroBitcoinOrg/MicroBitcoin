@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_ISMINE_H
-#define BITCOIN_WALLET_ISMINE_H
+#ifndef MICRO_WALLET_ISMINE_H
+#define MICRO_WALLET_ISMINE_H
 
 #include <script/standard.h>
 
@@ -17,7 +17,7 @@ class CScript;
 /**
  * IsMine() return codes, which depend on ScriptPubKeyMan implementation.
  * Not every ScriptPubKeyMan covers all types, please refer to
- * https://github.com/bitcoin/bitcoin/blob/master/doc/release-notes/release-notes-0.21.0.md#ismine-semantics
+ * https://github.com/MicroBitcoinOrg/MicroBitcoin/blob/master/doc/release-notes/release-notes-0.21.0.md#ismine-semantics
  * for better understanding.
  *
  * For LegacyScriptPubKeyMan,
@@ -67,4 +67,4 @@ struct CachableAmount
     }
 };
 
-#endif // BITCOIN_WALLET_ISMINE_H
+#endif // MICRO_WALLET_ISMINE_H

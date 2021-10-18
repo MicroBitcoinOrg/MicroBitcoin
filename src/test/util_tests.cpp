@@ -1048,7 +1048,7 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
 
     // If check below fails, should manually dump the results with:
     //
-    //   ARGS_MERGE_TEST_OUT=results.txt ./test_bitcoin --run_test=util_tests/util_ArgsMerge
+    //   ARGS_MERGE_TEST_OUT=results.txt ./test_micro --run_test=util_tests/util_ArgsMerge
     //
     // And verify diff against previous results to make sure the changes are expected.
     //
@@ -1151,7 +1151,7 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
 
     // If check below fails, should manually dump the results with:
     //
-    //   CHAIN_MERGE_TEST_OUT=results.txt ./test_bitcoin --run_test=util_tests/util_ChainMerge
+    //   CHAIN_MERGE_TEST_OUT=results.txt ./test_micro --run_test=util_tests/util_ChainMerge
     //
     // And verify diff against previous results to make sure the changes are expected.
     //
@@ -1718,66 +1718,66 @@ BOOST_AUTO_TEST_CASE(test_FormatSubVersion)
 BOOST_AUTO_TEST_CASE(test_ParseFixedPoint)
 {
     int64_t amount = 0;
-    BOOST_CHECK(ParseFixedPoint("0", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("0", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 0LL);
-    BOOST_CHECK(ParseFixedPoint("1", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 100000000LL);
-    BOOST_CHECK(ParseFixedPoint("0.0", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("0.0", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 0LL);
-    BOOST_CHECK(ParseFixedPoint("-0.1", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("-0.1", 4, &amount));
     BOOST_CHECK_EQUAL(amount, -10000000LL);
-    BOOST_CHECK(ParseFixedPoint("1.1", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1.1", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 110000000LL);
-    BOOST_CHECK(ParseFixedPoint("1.10000000000000000", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1.10000000000000000", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 110000000LL);
-    BOOST_CHECK(ParseFixedPoint("1.1e1", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1.1e1", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 1100000000LL);
-    BOOST_CHECK(ParseFixedPoint("1.1e-1", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1.1e-1", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 11000000LL);
-    BOOST_CHECK(ParseFixedPoint("1000", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1000", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 100000000000LL);
-    BOOST_CHECK(ParseFixedPoint("-1000", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("-1000", 4, &amount));
     BOOST_CHECK_EQUAL(amount, -100000000000LL);
-    BOOST_CHECK(ParseFixedPoint("0.00000001", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("0.00000001", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 1LL);
-    BOOST_CHECK(ParseFixedPoint("0.0000000100000000", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("0.0000000100000000", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 1LL);
-    BOOST_CHECK(ParseFixedPoint("-0.00000001", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("-0.00000001", 4, &amount));
     BOOST_CHECK_EQUAL(amount, -1LL);
-    BOOST_CHECK(ParseFixedPoint("1000000000.00000001", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("1000000000.00000001", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 100000000000000001LL);
-    BOOST_CHECK(ParseFixedPoint("9999999999.99999999", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("9999999999.99999999", 4, &amount));
     BOOST_CHECK_EQUAL(amount, 999999999999999999LL);
-    BOOST_CHECK(ParseFixedPoint("-9999999999.99999999", 8, &amount));
+    BOOST_CHECK(ParseFixedPoint("-9999999999.99999999", 4, &amount));
     BOOST_CHECK_EQUAL(amount, -999999999999999999LL);
 
-    BOOST_CHECK(!ParseFixedPoint("", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("a-1000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-a1000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-1000a", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-01000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("00.1", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint(".1", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("--0.1", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("0.000000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-0.000000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("0.00000001000000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("10000000000.00000000", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("10000000000.00000001", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000009", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("10000000000.00000009", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-99999999999.99999999", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("99999909999.09999999", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("92233720368.54775807", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("92233720368.54775808", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-92233720368.54775808", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("-92233720368.54775809", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("1.1e", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("1.1e-", 8, &amount));
-    BOOST_CHECK(!ParseFixedPoint("1.", 8, &amount));
+    BOOST_CHECK(!ParseFixedPoint("", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("a-1000", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-a1000", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-1000a", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-01000", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("00.1", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint(".1", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("--0.1", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("0.000000001", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-0.000000001", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("0.00000001000000001", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000000", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("10000000000.00000000", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000001", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("10000000000.00000001", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-10000000000.00000009", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("10000000000.00000009", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-99999999999.99999999", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("99999909999.09999999", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("92233720368.54775807", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("92233720368.54775808", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-92233720368.54775808", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("-92233720368.54775809", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1.1e", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1.1e-", 4, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1.", 4, &amount));
 
     // Test with 3 decimal places for fee rates in sat/vB.
     BOOST_CHECK(ParseFixedPoint("0.001", 3, &amount));
@@ -1962,7 +1962,7 @@ BOOST_AUTO_TEST_CASE(test_ToUpper)
 BOOST_AUTO_TEST_CASE(test_Capitalize)
 {
     BOOST_CHECK_EQUAL(Capitalize(""), "");
-    BOOST_CHECK_EQUAL(Capitalize("bitcoin"), "Bitcoin");
+    BOOST_CHECK_EQUAL(Capitalize("micro"), "MicroBitcoin");
     BOOST_CHECK_EQUAL(Capitalize("\x00\xfe\xff"), "\x00\xfe\xff");
 }
 

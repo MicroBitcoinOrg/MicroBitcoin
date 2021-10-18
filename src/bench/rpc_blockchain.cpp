@@ -28,7 +28,7 @@ struct TestBlockAndIndex {
 
         stream >> block;
 
-        blockHash = block.GetHash();
+        blockHash = block.GetIndexHash();
         blockindex.phashBlock = &blockHash;
         blockindex.nBits = 403014710;
     }

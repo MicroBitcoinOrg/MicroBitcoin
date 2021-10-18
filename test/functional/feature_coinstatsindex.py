@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020 The Bitcoin Core developers
+# Copyright (c) 2020 The MicroBitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test coinstatsindex across nodes.
@@ -28,14 +28,14 @@ from test_framework.script import (
     OP_FALSE,
     OP_RETURN,
 )
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import MicroBitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
     try_rpc,
 )
 
-class CoinStatsIndexTest(BitcoinTestFramework):
+class CoinStatsIndexTest(MicroBitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
@@ -159,7 +159,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         signed_tx1 = self.nodes[0].signrawtransactionwithwallet(funded_tx1['hex'])
         tx1_txid = self.nodes[0].sendrawtransaction(signed_tx1['hex'])
 
-        # Find the right position of the 21 BTC output
+        # Find the right position of the 21 MBC output
         tx1_final = self.nodes[0].gettransaction(tx1_txid)
         for output in tx1_final['details']:
             if output['amount'] == Decimal('21.00000000') and output['category'] == 'receive':

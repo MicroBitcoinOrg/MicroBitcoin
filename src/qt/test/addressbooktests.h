@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_TEST_ADDRESSBOOKTESTS_H
-#define BITCOIN_QT_TEST_ADDRESSBOOKTESTS_H
+#ifndef MICRO_QT_TEST_ADDRESSBOOKTESTS_H
+#define MICRO_QT_TEST_ADDRESSBOOKTESTS_H
 
 #include <QObject>
 #include <QTest>
@@ -24,4 +24,4 @@ private Q_SLOTS:
     void addressBookTests();
 };
 
-#endif // BITCOIN_QT_TEST_ADDRESSBOOKTESTS_H
+#endif // MICRO_QT_TEST_ADDRESSBOOKTESTS_H

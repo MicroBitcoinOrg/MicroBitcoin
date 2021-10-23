@@ -81,10 +81,10 @@ std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKey);
  * Validate and return a CAmount from a UniValue number or string.
  *
  * @param[in] value     UniValue number or string to parse.
- * @param[in] decimals  Number of significant digits (default: 8).
+ * @param[in] decimals  Number of significant digits (default: 4).
  * @returns a CAmount if the various checks pass.
  */
-CAmount AmountFromValue(const UniValue& value, int decimals = 8);
+CAmount AmountFromValue(const UniValue& value, int decimals = 4);
 
 using RPCArgList = std::vector<std::pair<std::string, UniValue>>;
 std::string HelpExampleCli(const std::string& methodname, const std::string& args);

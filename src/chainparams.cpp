@@ -479,15 +479,15 @@ public:
         consensus.rewardEpoch = 525960 * 2; 
         consensus.rewardEpochRate = 0.3;
 
-        const char* pszTimestamp = "The WSJ 09/Oct/2019 Nobel Prize in Chemistry Awarded to Developers of Lithium-Ion Batteries";
+        const char* pszTimestamp = "Cretaceous Bird-Like Dinosaur Had Adaptations for Swimming and Diving | Sci-News Dec 2, 2022";
 
         vSnapshot = EmptySnapshot();
 
-        genesis = CreateGenesisBlock(1296688602, 7, 0x207fffff, 1, consensus.baseReward, pszTimestamp, vSnapshot);
+        genesis = CreateGenesisBlock(1670163306, 1, 0x207fffff, 1, consensus.baseReward, pszTimestamp, vSnapshot);
         consensus.hashGenesisBlock = genesis.GetIndexHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x7dd0f7fe5f080148d61522ba7c271d9a704e90930da64633dd13d245b7f616d8"));
-        assert(genesis.hashMerkleRoot == uint256S("0xd5322aa9dc80dda1982ba855afe7970bf246589a18f3c5920320849a813eb0fc"));
+        assert(consensus.hashGenesisBlock == uint256S("0x809f50088e594b701c0c9a3377cb165255ad621ea2664ee41b164ca28a899722"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2c3057ab4ec6d1a7a89079100bcdb9d5e3b17815f878ec007d4c9609c599dbc7"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -499,20 +499,11 @@ public:
 
         checkpointData = {
             {
-                {0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")},
+                {0, uint256S("809f50088e594b701c0c9a3377cb165255ad621ea2664ee41b164ca28a899722")},
             }
         };
 
-        m_assumeutxo_data = MapAssumeutxo{
-            {
-                110,
-                {AssumeutxoHash{uint256S("0x1ebbf5850204c0bdb15bf030f47c7fe91d45c44c712697e4509ba67adb01c618")}, 110},
-            },
-            {
-                200,
-                {AssumeutxoHash{uint256S("0x51c8d11d8b5c1de51543c579736e786aa2736206d1e11e627568029ce092cf62")}, 200},
-            },
-        };
+        m_assumeutxo_data = MapAssumeutxo{};
 
         chainTxData = ChainTxData{
             0,
@@ -526,7 +517,7 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        bech32_hrp = "bcrt";
+        bech32_hrp = "rmbc";
     }
 
     /**

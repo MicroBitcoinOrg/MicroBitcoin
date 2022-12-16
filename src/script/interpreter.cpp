@@ -12,7 +12,7 @@
 #include <script/script.h>
 #include <uint256.h>
 
-typedef std::vector<unsigned char> valtype;
+#include <script/standard.h>
 
 namespace {
 
@@ -60,7 +60,7 @@ static inline void popstack(std::vector<valtype>& stack)
     stack.pop_back();
 }
 
-bool static IsCompressedOrUncompressedPubKey(const valtype &vchPubKey) {
+bool IsCompressedOrUncompressedPubKey(const valtype &vchPubKey) {
     if (vchPubKey.size() < CPubKey::COMPRESSED_SIZE) {
         //  Non-canonical public key: too short
         return false;

@@ -5,11 +5,11 @@
 #ifndef MICRO_SUPPORT_LOCKEDPOOL_H
 #define MICRO_SUPPORT_LOCKEDPOOL_H
 
-#include <stdint.h>
+#include <cstddef>
 #include <list>
 #include <map>
-#include <mutex>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 
 /**

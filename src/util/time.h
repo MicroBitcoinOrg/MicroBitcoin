@@ -12,6 +12,11 @@
 #include <stdint.h>
 #include <string>
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wenum-constexpr-conversion"
+#endif
+
 using namespace std::chrono_literals;
 
 void UninterruptibleSleep(const std::chrono::microseconds& n);

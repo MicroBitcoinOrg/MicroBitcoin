@@ -120,6 +120,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 1056905;
 
+        // Supply hardfork
+        consensus.nSubsidyAddress = "";
+        consensus.nSubsidyHeight = 99999999999;
+        consensus.nSubsidyAmount = 1000 * COIN;
+
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000054d62a0d6408");
         consensus.defaultAssumeValid = uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2"); // 1056000
 
@@ -239,6 +244,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1619222400; // April 24th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1628640000; // August 11th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
+
+        // Supply hardfork
+        consensus.nSubsidyAddress = "";
+        consensus.nSubsidyHeight = 99999999999;
+        consensus.nSubsidyAmount = 1000 * COIN;
 
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000005180c3bd8290da33a1a");
         consensus.defaultAssumeValid = uint256S("0x0000000000004ae2f3896ca8ecd41c460a35bf6184e145d91558cece1c688a76"); // 2010000
@@ -458,6 +468,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
+
+        // Supply hardfork
+        consensus.nSubsidyAddress = "rmbc1qe6dtjj50gc4fq0k3pal73zargq96c9mgvljrd6";
+        consensus.nSubsidyHeight = 200;
+        consensus.nSubsidyAmount = 1000 * COIN;
 
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};

@@ -89,6 +89,11 @@ struct Params {
     CAmount baseReward;
     int rewardEpoch;
 
+    // Subsidy hardfork
+    std::string nSubsidyAddress;
+    int nSubsidyHeight;
+    CAmount nSubsidyAmount;
+
     /**
      * If true, witness commitments contain a payload equal to a MicroBitcoin Script solution
      * to the signet challenge. See BIP325.

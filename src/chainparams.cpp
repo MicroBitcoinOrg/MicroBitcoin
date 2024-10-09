@@ -121,7 +121,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 1056905;
 
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000054d62a0d6408");
-        consensus.defaultAssumeValid = uint256S("0xd7b08ed3874a97dbf7bc8ba3b7b55e75704c57e3a2c52737232fbcdc93bed040"); // 1056000
+        consensus.defaultAssumeValid = uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2"); // 1056000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -148,7 +148,6 @@ public:
         std::vector<SnapshotProvider> providers = {
             {"http://snapshot.microbitcoin.org", "/mainnet.csv"},
             {"http://micro.codepillow.io", "/mainnet.csv"},
-            {"http://sman.pw", "/snapshot/mainnet.csv"}
         };
 
         vSnapshot = InitSnapshot("mainnet.csv", providers);
@@ -190,6 +189,8 @@ public:
                 { 800000, uint256S("0x038389a836e6f90e0f379bdc6a0c74d841eb6dbec8b23e2b335a981be3d0a56f")},
                 { 900000, uint256S("0xb7381d1d7c281eec55fa985fd28bdb0c3bf5373a936ea37b3d861a7520d128f4")},
                 { 1000000, uint256S("0x849d3a7f266d3ba3ebce81c20f467f532832652a86e6495b03ec77985535efc9")},
+                { 2000000, uint256S("0xa4ecd2833734ce7bb8fb1af7ae53bc33c4bf986dbc7eb87d8d01d6873fdb7ded")},
+                { 2600000, uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2")},
             }
         };
 
@@ -198,10 +199,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data from rpc: getchaintxstats 4096 d7b08ed3874a97dbf7bc8ba3b7b55e75704c57e3a2c52737232fbcdc93bed040
-            /* nTime    */ 1634486414,
-            /* nTxCount */ 1381700,
-            /* dTxRate  */ 0.02002703629723786
+            // Data from rpc: getchaintxstats 4096 23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2
+            /* nTime    */ 1727905204,
+            /* nTxCount */ 3043896,
+            /* dTxRate  */ 0.01708408484745776
         };
     }
 };

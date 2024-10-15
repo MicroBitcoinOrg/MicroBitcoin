@@ -86,6 +86,7 @@ struct Params {
     uint256 defaultAssumeValid;
     int lwmaAveragingWindow;
     double rewardEpochRate;
+    double rewardEpochRate_v2;
     CAmount baseReward;
     int rewardEpoch;
 

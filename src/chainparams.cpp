@@ -148,6 +148,7 @@ public:
         // Decrease reward by 30% each 2 years
         consensus.rewardEpoch = 525960 * 2; 
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "The WSJ 09/Oct/2019 Nobel Prize in Chemistry Awarded to Developers of Lithium-Ion Batteries";
         std::vector<SnapshotProvider> providers = {
@@ -257,8 +258,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         pchMessageStart[0] = 0x74;
         pchMessageStart[1] = 0x6d;
@@ -406,8 +408,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "The WSJ 09/Oct/2019 Nobel Prize in Chemistry Awarded to Developers of Lithium-Ion Batteries";
         vSnapshot = EmptySnapshot();
@@ -492,8 +495,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "Cretaceous Bird-Like Dinosaur Had Adaptations for Swimming and Diving | Sci-News Dec 2, 2022";
 

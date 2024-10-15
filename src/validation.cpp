@@ -1196,11 +1196,17 @@ CTransactionRef GetTransaction(const CBlockIndex* const block_index, const CTxMe
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
+    double rewardEpochRate = consensusParams.rewardEpochRate;
+
     // Subsidy hardfork
     if (nHeight == ::Params().GetConsensus().nSubsidyHeight)
         return ::Params().GetConsensus().nSubsidyAmount;
 
-    const long double r = 1 + (std::log(1 - consensusParams.rewardEpochRate) / consensusParams.rewardEpoch);
+    // Updated epoch reduction rate post hardfork
+    if (nHeight > ::Params().GetConsensus().nSubsidyHeight)
+        rewardEpochRate = consensusParams.rewardEpochRate_v2;
+
+    const long double r = 1 + (std::log(1 - rewardEpochRate) / consensusParams.rewardEpoch);
     return consensusParams.baseReward * std::pow(r, nHeight);
 }
 

@@ -24,7 +24,7 @@ unsigned int Lwma3CalculateNextWorkRequired(const CBlockIndex* pindexLast, const
 
     // Subsidy hardfork
     // Here we reset the diff in order to guarantee smooth experience
-    if (height == params.nSubsidyHeight)
+    if (height >= params.nSubsidyHeight && height < params.nSubsidyHeight + N)
         return powLimit.GetCompact();
 
     arith_uint256 sumTarget, previousDiff, nextTarget;

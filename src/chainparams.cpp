@@ -121,9 +121,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 1056905;
 
         // Supply hardfork
-        consensus.nSubsidyAddress = "";
-        consensus.nSubsidyHeight = 99999999999;
-        consensus.nSubsidyAmount = 1000 * COIN;
+        consensus.nSubsidyAddress = "mbc1qsr02lgky5tghhxupl4u48l96h7fdk07muekwru";
+        consensus.nSubsidyHeight = 2650000;
+        consensus.nSubsidyAmount = 11000000000 * COIN;
 
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000054d62a0d6408");
         consensus.defaultAssumeValid = uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2"); // 1056000

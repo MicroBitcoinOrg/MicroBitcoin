@@ -473,9 +473,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
         // Supply hardfork
-        consensus.nSubsidyAddress = "rmbc1qe6dtjj50gc4fq0k3pal73zargq96c9mgvljrd6";
+        consensus.nSubsidyAddress = "rmbc1q0xey88kv87e7c82dj8kuje4tesvster8a562ux";
         consensus.nSubsidyHeight = 200;
-        consensus.nSubsidyAmount = 1000 * COIN;
+        consensus.nSubsidyAmount = 11000000000 * COIN;
 
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};

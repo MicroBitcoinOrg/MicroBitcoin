@@ -52,6 +52,9 @@
 #include <validationinterface.h>
 #include <warnings.h>
 
+#include <key_io.h>
+#include <script/standard.h>
+
 #include <numeric>
 #include <optional>
 #include <string>
@@ -1193,7 +1196,17 @@ CTransactionRef GetTransaction(const CBlockIndex* const block_index, const CTxMe
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    const long double r = 1 + (std::log(1 - consensusParams.rewardEpochRate) / consensusParams.rewardEpoch);
+    double rewardEpochRate = consensusParams.rewardEpochRate;
+
+    // Subsidy hardfork
+    if (nHeight == ::Params().GetConsensus().nSubsidyHeight)
+        return ::Params().GetConsensus().nSubsidyAmount;
+
+    // Updated epoch reduction rate post hardfork
+    if (nHeight > ::Params().GetConsensus().nSubsidyHeight)
+        rewardEpochRate = consensusParams.rewardEpochRate_v2;
+
+    const long double r = 1 + (std::log(1 - rewardEpochRate) / consensusParams.rewardEpoch);
     return consensusParams.baseReward * std::pow(r, nHeight);
 }
 
@@ -3260,6 +3273,27 @@ static bool ContextualCheckBlock(const CBlock& block, BlockValidationState& stat
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
             return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-height", "block height mismatch in coinbase");
+        }
+    }
+
+    // Subsidy hardfork
+    if (nHeight == ::Params().GetConsensus().nSubsidyHeight) {
+        // Just in case
+        if (block.vtx[0]->vout.size() < 1) {
+            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-subsidy-hardfork-output", "invalid subsidy outoutput");
+        }
+
+        const CTxOut& output = block.vtx[0]->vout[0];
+
+        CTxDestination destination = DecodeDestination(::Params().GetConsensus().nSubsidyAddress);
+        CScript subsidyScript = GetScriptForDestination(destination);
+
+        if (output.scriptPubKey != subsidyScript) {
+            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-subsidy-hardfork-scriptpubkey", "invalid subsidy address");
+        }
+
+        if (output.nValue != ::Params().GetConsensus().nSubsidyAmount) {
+            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-subsidy-hardfork-amount", "invalid subsidy amount");
         }
     }
 

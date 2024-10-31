@@ -86,8 +86,14 @@ struct Params {
     uint256 defaultAssumeValid;
     int lwmaAveragingWindow;
     double rewardEpochRate;
+    double rewardEpochRate_v2;
     CAmount baseReward;
     int rewardEpoch;
+
+    // Subsidy hardfork
+    std::string nSubsidyAddress;
+    int nSubsidyHeight;
+    CAmount nSubsidyAmount;
 
     /**
      * If true, witness commitments contain a payload equal to a MicroBitcoin Script solution

@@ -22,6 +22,11 @@ unsigned int Lwma3CalculateNextWorkRequired(const CBlockIndex* pindexLast, const
     const arith_uint256 powLimit = UintToArith256(params.powLimit);
     if (height < N) { return powLimit.GetCompact(); }
 
+    // Subsidy hardfork
+    // Here we reset the diff in order to guarantee smooth experience
+    if (height >= params.nSubsidyHeight && height < params.nSubsidyHeight + N)
+        return powLimit.GetCompact();
+
     arith_uint256 sumTarget, previousDiff, nextTarget;
     int64_t thisTimestamp, previousTimestamp;
     int64_t t = 0, j = 0, solvetimeSum = 0;

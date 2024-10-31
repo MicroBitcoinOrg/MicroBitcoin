@@ -120,8 +120,13 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 1056905;
 
+        // Supply hardfork
+        consensus.nSubsidyAddress = "mbc1qsr02lgky5tghhxupl4u48l96h7fdk07muekwru";
+        consensus.nSubsidyHeight = 2650000;
+        consensus.nSubsidyAmount = 11000000000 * COIN;
+
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000054d62a0d6408");
-        consensus.defaultAssumeValid = uint256S("0xd7b08ed3874a97dbf7bc8ba3b7b55e75704c57e3a2c52737232fbcdc93bed040"); // 1056000
+        consensus.defaultAssumeValid = uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2"); // 1056000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -143,12 +148,12 @@ public:
         // Decrease reward by 30% each 2 years
         consensus.rewardEpoch = 525960 * 2; 
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "The WSJ 09/Oct/2019 Nobel Prize in Chemistry Awarded to Developers of Lithium-Ion Batteries";
         std::vector<SnapshotProvider> providers = {
             {"http://snapshot.microbitcoin.org", "/mainnet.csv"},
             {"http://micro.codepillow.io", "/mainnet.csv"},
-            {"http://sman.pw", "/snapshot/mainnet.csv"}
         };
 
         vSnapshot = InitSnapshot("mainnet.csv", providers);
@@ -190,6 +195,8 @@ public:
                 { 800000, uint256S("0x038389a836e6f90e0f379bdc6a0c74d841eb6dbec8b23e2b335a981be3d0a56f")},
                 { 900000, uint256S("0xb7381d1d7c281eec55fa985fd28bdb0c3bf5373a936ea37b3d861a7520d128f4")},
                 { 1000000, uint256S("0x849d3a7f266d3ba3ebce81c20f467f532832652a86e6495b03ec77985535efc9")},
+                { 2000000, uint256S("0xa4ecd2833734ce7bb8fb1af7ae53bc33c4bf986dbc7eb87d8d01d6873fdb7ded")},
+                { 2600000, uint256S("0x23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2")},
             }
         };
 
@@ -198,10 +205,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data from rpc: getchaintxstats 4096 d7b08ed3874a97dbf7bc8ba3b7b55e75704c57e3a2c52737232fbcdc93bed040
-            /* nTime    */ 1634486414,
-            /* nTxCount */ 1381700,
-            /* dTxRate  */ 0.02002703629723786
+            // Data from rpc: getchaintxstats 4096 23eef88fbc540be75a7b61188bcf118c29db9d4f5fa663863d0458f74ba675b2
+            /* nTime    */ 1727905204,
+            /* nTxCount */ 3043896,
+            /* dTxRate  */ 0.01708408484745776
         };
     }
 };
@@ -239,6 +246,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1628640000; // August 11th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
+        // Supply hardfork
+        consensus.nSubsidyAddress = "";
+        consensus.nSubsidyHeight = 99999999999;
+        consensus.nSubsidyAmount = 1000 * COIN;
+
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000005180c3bd8290da33a1a");
         consensus.defaultAssumeValid = uint256S("0x0000000000004ae2f3896ca8ecd41c460a35bf6184e145d91558cece1c688a76"); // 2010000
 
@@ -246,8 +258,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         pchMessageStart[0] = 0x74;
         pchMessageStart[1] = 0x6d;
@@ -395,8 +408,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "The WSJ 09/Oct/2019 Nobel Prize in Chemistry Awarded to Developers of Lithium-Ion Batteries";
         vSnapshot = EmptySnapshot();
@@ -458,6 +472,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
+        // Supply hardfork
+        consensus.nSubsidyAddress = "rmbc1q0xey88kv87e7c82dj8kuje4tesvster8a562ux";
+        consensus.nSubsidyHeight = 200;
+        consensus.nSubsidyAmount = 11000000000 * COIN;
+
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};
 
@@ -476,8 +495,9 @@ public:
         consensus.baseReward = 5500 * COIN;
 
         // Decrease reward by 30% each 2 years
-        consensus.rewardEpoch = 525960 * 2; 
+        consensus.rewardEpoch = 525960 * 2;
         consensus.rewardEpochRate = 0.3;
+        consensus.rewardEpochRate_v2 = 0.18;
 
         const char* pszTimestamp = "Cretaceous Bird-Like Dinosaur Had Adaptations for Swimming and Diving | Sci-News Dec 2, 2022";
 
